@@ -5,10 +5,15 @@
  */
 package com.orangeobjects.mavenizer.business;
 
+import com.orangeobjects.mavenizer.data.JarLibrary;
+import com.orangeobjects.mavenizer.data.Library;
+import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 
 /**
  *
@@ -19,7 +24,9 @@ public class Manager {
     private final static Logger LOGGER = Logger.getLogger(Manager.class.getName());
 
     private BlockingQueue<Operation> operationQ = new LinkedBlockingQueue<>();
-    
+    private ObservableSet<Library> libCollection = FXCollections
+            .observableSet(new TreeSet<>());
+
     private Manager() {
     }
     
@@ -62,4 +69,13 @@ public class Manager {
             }
         }
     };
+
+    public ObservableSet<Library> getLibCollection() {
+        return libCollection;
+    }
+    
+
+    public void opAddLib(JarLibrary lib) {
+        libCollection.add(lib);
+    }
 }

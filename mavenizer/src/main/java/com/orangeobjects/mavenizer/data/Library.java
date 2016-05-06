@@ -11,4 +11,6 @@ package com.orangeobjects.mavenizer.data;
  */
 public interface Library {
     
+    int getId();
+    String getDisplayName();
 }

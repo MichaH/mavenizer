@@ -6,37 +6,26 @@
 package com.orangeobjects.mavenizer.business.operations;
 
 import com.orangeobjects.mavenizer.business.AbstractOperation;
-import com.orangeobjects.mavenizer.business.Manager;
 import com.orangeobjects.mavenizer.business.OperationException;
 import com.orangeobjects.mavenizer.business.OperationType;
-import com.orangeobjects.mavenizer.data.JarLibrary;
-import java.nio.file.Path;
 
 /**
  *
  * @author michael
  */
-public class OperationAddLib extends AbstractOperation {
+public class OperationStopExecutor extends AbstractOperation {
 
-    private final Path originalPath;
-
-    public OperationAddLib(Path originalPath) {
-        this.originalPath = originalPath;
-    }
-    
     @Override
     public void execute() throws OperationException {
-        JarLibrary lib = new JarLibrary(originalPath);
-        Manager.getInstance().opAddLib(lib);
     }
 
     @Override
     public String getName() {
-        return "Add a new .jar-Library to collection";
+        return "stop executor";
     }
 
     @Override
     public OperationType getOperationType() {
-        return OperationType.BUSINESS;
+        return OperationType.SYSTEM_STOP_EXECUTOR;
     }
 }

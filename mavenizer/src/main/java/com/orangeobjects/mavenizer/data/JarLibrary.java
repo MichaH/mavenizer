@@ -16,8 +16,11 @@ import javafx.beans.property.StringProperty;
  *
  * @author Michael.Hofmann@OrangeObjects.de
  */
-public class JarLibrary implements Library {
+public class JarLibrary implements Library, Comparable<Library> {
 
+    private static int nextId = 0;
+    
+    private final int id;
     private final Path originalPath;
     // only a cache for the immutable extracted name
     private final String originalName;
@@ -36,6 +39,7 @@ public class JarLibrary implements Library {
     private boolean install = true;
     
     public JarLibrary(Path path) {
+        id = ++nextId;
         originalPath = path;
         originalName = "originalName";
         optOriginalVersion = Optional.of("1.0");
@@ -135,5 +139,20 @@ public class JarLibrary implements Library {
 
     public Optional<String> getOptOriginalVersion() {
         return optOriginalVersion;
+    }
+
+    @Override
+    public int compareTo(Library o) {
+        return this.getDisplayName().compareTo(o.getDisplayName());
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return getOriginalName();
     }
 }

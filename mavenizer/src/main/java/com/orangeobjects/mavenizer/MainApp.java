@@ -13,16 +13,15 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // Parent root = FXMLLoader.load(getClass().getResource("/fxml/Cover.fxml"));
-        // Parent root = FXMLLoader.load(getClass().getResource("/fxml/LibraryNode.fxml"));
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Libraries.fxml"));
         
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Cover.fxml"));
         Scene scene = new Scene(root);
-        // scene.getStylesheets().add("/styles/cover.css");
-        // scene.getStylesheets().add("/styles/librarynode.css");
-        scene.getStylesheets().add("/styles/libraries.css");
+        scene.getStylesheets().add("/styles/cover.css");
+        stage.setTitle("Mavenizer (c) OrangeObjects");
         
-        stage.setTitle("JavaFX and Maven");
+        
+        
+        
         stage.setScene(scene);
         stage.show();
     }
@@ -36,10 +35,7 @@ public class MainApp extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
         Manager.getInstance().start();
-        
         launch(args);
     }
-
 }
