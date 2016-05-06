@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.orangeobjects.mavenizer.data;
+package com.orangeobjects.mavenizer.business;
 
 /**
  *
  * @author michael
  */
-public interface Library {
+public enum OperationType {
+    
+    BUSINESS, SYSTEM_STOP_EXECUTOR
     
 }

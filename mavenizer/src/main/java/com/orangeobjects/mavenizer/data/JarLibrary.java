@@ -16,7 +16,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Michael.Hofmann@OrangeObjects.de
  */
-public class JarLibrary extends Library {
+public class JarLibrary implements Library {
 
     private final Path originalPath;
     // only a cache for the immutable extracted name

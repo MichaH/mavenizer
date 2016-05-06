@@ -1,5 +1,6 @@
 package com.orangeobjects.mavenizer;
 
+import com.orangeobjects.mavenizer.business.Manager;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +36,9 @@ public class MainApp extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        Manager.getInstance().start();
+        
         launch(args);
     }
 
