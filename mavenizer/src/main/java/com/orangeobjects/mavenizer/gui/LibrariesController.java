@@ -78,12 +78,12 @@ public class LibrariesController implements Initializable {
                     assert lib != null;
                     if (lib instanceof JarLibrary) {
                         JarLibrary jarLibrary = (JarLibrary) lib;
-                        final TitledPane root = FXMLLoader.load(getClass().getResource("/fxml/LibraryNode.fxml"));
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                accLibList.getPanes().add(root);                        
-                            }
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LibraryNode.fxml"));
+                        final TitledPane root = loader.load();
+                        LibraryNodeController rootCtrl = loader.getController();
+                        rootCtrl.equip(jarLibrary);
+                        Platform.runLater(() -> {
+                            accLibList.getPanes().add(root);
                         });
                     } else {
                         // for future releases
@@ -103,7 +103,7 @@ public class LibrariesController implements Initializable {
             return;
         }
         fileList.forEach(f -> {
-            OperationAddLib op = new OperationAddLib(f.toPath());
+            OperationAddLib op = new OperationAddLib(f);
             Manager.getInstance().add(op);
         });
     }
@@ -112,8 +112,9 @@ public class LibrariesController implements Initializable {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Java Library");
+        fileChooser.setInitialDirectory(new File("D:\\boxFS\\proj\\beansPost\\beansPost\\beansPoster\\target"));
         fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Library Files", "*.jar", "*.zip", "*.lib"),
+                new ExtensionFilter("Library Files", "*.jar", "*.zip", "*.lib", "*.ear", "*.war"),
                 new ExtensionFilter("All Files", "*.*"));
         return fileChooser.showOpenMultipleDialog(null);
     }

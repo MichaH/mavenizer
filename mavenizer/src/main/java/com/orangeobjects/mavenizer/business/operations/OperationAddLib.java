@@ -10,7 +10,7 @@ import com.orangeobjects.mavenizer.business.Manager;
 import com.orangeobjects.mavenizer.business.OperationException;
 import com.orangeobjects.mavenizer.business.OperationType;
 import com.orangeobjects.mavenizer.data.JarLibrary;
-import java.nio.file.Path;
+import java.io.File;
 
 /**
  *
@@ -18,15 +18,15 @@ import java.nio.file.Path;
  */
 public class OperationAddLib extends AbstractOperation {
 
-    private final Path originalPath;
+    private final File originalFile;
 
-    public OperationAddLib(Path originalPath) {
-        this.originalPath = originalPath;
+    public OperationAddLib(File originalFile) {
+        this.originalFile = originalFile;
     }
     
     @Override
     public void execute() throws OperationException {
-        JarLibrary lib = new JarLibrary(originalPath);
+        JarLibrary lib = new JarLibrary(originalFile);
         Manager.getInstance().opAddLib(lib);
     }
 

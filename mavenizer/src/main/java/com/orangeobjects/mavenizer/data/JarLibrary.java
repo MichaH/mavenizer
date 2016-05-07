@@ -7,10 +7,14 @@
  */
 package com.orangeobjects.mavenizer.data;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -18,14 +22,21 @@ import javafx.beans.property.StringProperty;
  */
 public class JarLibrary implements Library, Comparable<Library> {
 
+    private final static Logger LOGGER = Logger.getLogger(JarLibrary.class.getName());
+    // ^([-\w]*[a-zA-Z]+)[-_]*([0-9\.]*).([a-zA-Z]{3})$
+    private final static String FILENAME_PATTERN = "^([-\\w]*[a-zA-Z]+)[-_]*([0-9\\.]*).([a-zA-Z]{3})$";
+    private final Pattern pattern = Pattern.compile(FILENAME_PATTERN);
+    
     private static int nextId = 0;
     
-    private final int id;
-    private final Path originalPath;
+    private final int id;                                // example: 1
+    private final File originalFile;                     // example: /src/target/wordTrans-2.3.jar
     // only a cache for the immutable extracted name
-    private final String originalName;
+    private final String originalName;                   // example: wordTrans-2.3.jar
+    // only a cache for the immutable extracted artefact name
+    private final String originalArtefactname;           // example: wordTrans
     // only a cache for the immutable extracted version
-    private final Optional<String> optOriginalVersion;
+    private final Optional<String> optOriginalVersion;   // example: 2.3
 
     private boolean inheritedGroupId = true;
     private final StringProperty groupId = new SimpleStringProperty();
@@ -38,11 +49,23 @@ public class JarLibrary implements Library, Comparable<Library> {
     private boolean pomDependency = true;
     private boolean install = true;
     
-    public JarLibrary(Path path) {
+    public JarLibrary(File file) {
+        assert file != null;
+        
         id = ++nextId;
-        originalPath = path;
-        originalName = "originalName";
-        optOriginalVersion = Optional.of("1.0");
+        // name examination
+        originalFile = file;
+        originalName = file.getName();
+        Matcher m = null;
+        try {
+            m = pattern.matcher(originalName);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+        }
+        originalArtefactname = m != null && m.matches() && StringUtils.isNotBlank(m.group(1)) ? 
+                m.group(1) : originalName;
+        optOriginalVersion = m != null && m.matches() && StringUtils.isNotBlank(m.group(2)) ? 
+                Optional.of(m.group(2)) : Optional.empty();
     }
 
     public String getScope() {
@@ -133,8 +156,8 @@ public class JarLibrary implements Library, Comparable<Library> {
         return originalName;
     }
 
-    public Path getOriginalPath() {
-        return originalPath;
+    public File getOriginalFile() {
+        return originalFile;
     }
 
     public Optional<String> getOptOriginalVersion() {
@@ -154,5 +177,9 @@ public class JarLibrary implements Library, Comparable<Library> {
     @Override
     public String getDisplayName() {
         return getOriginalName();
+    }
+
+    public String getOriginalArtefactname() {
+        return originalArtefactname;
     }
 }

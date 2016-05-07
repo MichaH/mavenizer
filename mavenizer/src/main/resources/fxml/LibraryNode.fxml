@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -8,8 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<TitledPane animated="false" text="commons-lang-3.2.jar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orangeobjects.mavenizer.gui.LibraryNodeController">
+<TitledPane fx:id="patJarlibMainPanel" animated="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orangeobjects.mavenizer.gui.LibraryNodeController">
 <content>
   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="385.0" prefWidth="673.0">
          <children>
@@ -33,15 +33,15 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label contentDisplay="CENTER" text="originales Quellverzeichnis" GridPane.columnSpan="2147483647">
+                  <Label fx:id="labOriginalFile" contentDisplay="CENTER" text="original file name" GridPane.columnSpan="2147483647">
                      <GridPane.margin>
                         <Insets right="20.0" />
                      </GridPane.margin>
                   </Label>
                   <Label text="original libname/version" GridPane.rowIndex="1" />
                   <Label text="groupId" GridPane.rowIndex="3" />
-                  <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField editable="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <TextField fx:id="ftxOriginalArtefactId" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="ftxOriginalVersion" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <TextField fx:id="fieGroupId" onInputMethodTextChanged="#changedGroupId" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Label text="artefactId" GridPane.rowIndex="4" />
                   <Label layoutX="132.0" layoutY="137.0" text="type" GridPane.rowIndex="10" />
@@ -57,6 +57,11 @@
                   <TextField fx:id="fieGroupId2" layoutX="190.0" layoutY="133.0" onInputMethodTextChanged="#changedGroupId" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label layoutX="18.0" layoutY="47.0" text="new libname" GridPane.rowIndex="6" />
                   <TextField fx:id="fieGroupId11" editable="false" layoutX="190.0" layoutY="163.0" onInputMethodTextChanged="#changedGroupId" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <Label fx:id="labId" nodeOrientation="LEFT_TO_RIGHT" opacity="0.5" prefHeight="23.0" prefWidth="158.0" text="#">
+                     <font>
+                        <Font name="Courier New" size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </GridPane>
             <Button layoutX="14.0" layoutY="328.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="114.0" text="Cancel" AnchorPane.leftAnchor="14.0" />
