@@ -1,6 +1,7 @@
 package com.orangeobjects.mavenizer;
 
 import com.orangeobjects.mavenizer.business.Manager;
+import com.orangeobjects.mavenizer.util.CommandLineArgs;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -46,6 +47,10 @@ public class MainApp extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        CommandLineArgs cli = new CommandLineArgs(args) ;
+        cli.parse();
+        
         Manager.getInstance().start();
         launch(args);
     }

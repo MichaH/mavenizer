@@ -8,6 +8,7 @@ package com.orangeobjects.mavenizer.business;
 import com.orangeobjects.mavenizer.business.operations.OperationStopApplication;
 import com.orangeobjects.mavenizer.data.JarLibrary;
 import com.orangeobjects.mavenizer.data.Library;
+import com.orangeobjects.mavenizer.util.ApplicationConfig;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -26,9 +27,10 @@ import javafx.scene.control.ButtonType;
 public class Manager {
     
     private final static Logger LOGGER = Logger.getLogger(Manager.class.getName());
-
+    
+    private ApplicationConfig config;
     private BlockingQueue<Operation> operationQ = new LinkedBlockingQueue<>();
-    private ObservableSet<Library> libCollection = FXCollections
+    private final ObservableSet<Library> libCollection = FXCollections
             .observableSet(new TreeSet<>());
 
     private Manager() {
@@ -43,6 +45,7 @@ public class Manager {
     }
     
     public void start() {
+        config = ApplicationConfig.getInstance();
         LOGGER.info("operation executor is starting...");
         Thread executor = new Thread(operationExecutor);
         executor.start();

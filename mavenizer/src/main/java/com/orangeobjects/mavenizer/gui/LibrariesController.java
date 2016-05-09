@@ -11,11 +11,14 @@ import com.orangeobjects.mavenizer.business.OperationException;
 import com.orangeobjects.mavenizer.business.operations.OperationAddLib;
 import com.orangeobjects.mavenizer.data.JarLibrary;
 import com.orangeobjects.mavenizer.data.Library;
+import com.orangeobjects.mavenizer.util.ApplicationConfig;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -32,6 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import org.apache.commons.validator.ValidatorException;
 
 /**
  * FXML Controller class
@@ -40,6 +44,9 @@ import javafx.stage.FileChooser.ExtensionFilter;
  */
 public class LibrariesController implements Initializable {
 
+    static final Logger LOGGER = Logger.getLogger(LibrariesController.class.getName());
+    private final static ApplicationConfig config = ApplicationConfig.getInstance();
+    
     @FXML
     private Accordion accLibList;
     @FXML
@@ -91,7 +98,7 @@ public class LibrariesController implements Initializable {
                     }
                 }
             } catch (IOException | OperationException ex) {
-                Logger.getLogger(LibrariesController.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -109,13 +116,18 @@ public class LibrariesController implements Initializable {
     }
 
     private List<File> selectFiles() {
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Java Library");
-        fileChooser.setInitialDirectory(new File("D:\\boxFS\\proj\\beansPost\\beansPost\\beansPoster\\target"));
-        fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Library Files", "*.jar", "*.zip", "*.lib", "*.ear", "*.war"),
-                new ExtensionFilter("All Files", "*.*"));
-        return fileChooser.showOpenMultipleDialog(null);
+        try {
+            String dirName = config.getProperty("filechooser.initialDirectory", null);
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Java Library");
+            fileChooser.setInitialDirectory(new File(dirName));
+            fileChooser.getExtensionFilters().addAll(
+                    new ExtensionFilter("Library Files", "*.jar", "*.zip", "*.lib", "*.ear", "*.war"),
+                    new ExtensionFilter("All Files", "*.*"));
+            return fileChooser.showOpenMultipleDialog(null);
+        } catch (InterruptedException | TimeoutException | ValidatorException ex) {
+            LOGGER.log(Level.SEVERE, "can't read property", ex);
+            return Collections.EMPTY_LIST;
+        }
     }
 }
