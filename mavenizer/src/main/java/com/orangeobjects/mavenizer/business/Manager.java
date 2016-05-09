@@ -9,6 +9,7 @@ import com.orangeobjects.mavenizer.business.operations.OperationStopApplication;
 import com.orangeobjects.mavenizer.data.JarLibrary;
 import com.orangeobjects.mavenizer.data.Library;
 import com.orangeobjects.mavenizer.util.ApplicationConfig;
+import com.orangeobjects.mavenizer.util.DelayedEventProducer;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -32,12 +33,17 @@ public class Manager {
     private BlockingQueue<Operation> operationQ = new LinkedBlockingQueue<>();
     private final ObservableSet<Library> libCollection = FXCollections
             .observableSet(new TreeSet<>());
+    private DelayedEventProducer signalizer = new DelayedEventProducer(3000L);
 
     private Manager() {
     }
     
     public static Manager getInstance() {
         return ManagerHolder.INSTANCE;
+    }
+
+    public DelayedEventProducer getSignalizer() {
+        return signalizer;
     }
     
     private static class ManagerHolder {
