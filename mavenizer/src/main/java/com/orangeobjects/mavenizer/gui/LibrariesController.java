@@ -35,6 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.ValidatorException;
 
 /**
@@ -120,7 +121,12 @@ public class LibrariesController implements Initializable {
             String dirName = config.getProperty("filechooser.initialDirectory", null);
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select Java Library");
-            fileChooser.setInitialDirectory(new File(dirName));
+            if (StringUtils.isNotBlank(dirName)) {
+                File initialDir = new File(dirName);
+                if (initialDir.canRead() && initialDir.isDirectory()) {
+                    fileChooser.setInitialDirectory(initialDir);
+                }
+            }
             fileChooser.getExtensionFilters().addAll(
                     new ExtensionFilter("Library Files", "*.jar", "*.zip", "*.lib", "*.ear", "*.war"),
                     new ExtensionFilter("All Files", "*.*"));
