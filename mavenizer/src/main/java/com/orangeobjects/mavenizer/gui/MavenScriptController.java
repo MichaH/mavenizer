@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
@@ -24,20 +25,32 @@ import javafx.scene.control.TextArea;
  */
 public class MavenScriptController implements Initializable, Observer {
 
+    private final static String NL = "\n";
+    
     @FXML
     TextArea txaScriptText;
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Manager.getInstance().getSignalizer().addObserver(this);
-    }    
+    }
 
     @Override
     public void update(Observable o, Object arg) {
-        txaScriptText.setText("Meldung kam an");
-        System.out.println("Meldung kam an");
+        StringBuilder sb = new StringBuilder();
+        Manager.getInstance().getLibrarySet().forEach(lib -> {
+            sb.append("mvn install:install-file")
+              .append(" -D").append("file=").append(lib.getOriginalFile().getAbsolutePath())
+              .append(" -D").append("groupId=").append(lib.getArtifactId())
+              .append(" -D").append("artifactId=").append(lib.getGroupId())
+              .append(" -D").append("version=").append(lib.getVersion())
+              .append(" -D").append("packaging=jar").append(NL);
+        });
+        Platform.runLater(() -> {
+            txaScriptText.setText(sb.toString());
+        });
     }
 }

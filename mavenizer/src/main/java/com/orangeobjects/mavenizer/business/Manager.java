@@ -10,11 +10,14 @@ import com.orangeobjects.mavenizer.data.JarLibrary;
 import com.orangeobjects.mavenizer.data.Library;
 import com.orangeobjects.mavenizer.util.ApplicationConfig;
 import com.orangeobjects.mavenizer.util.DelayedEventProducer;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
@@ -34,9 +37,10 @@ public class Manager {
     private BlockingQueue<Operation> operationQ = new LinkedBlockingQueue<>();
     private final ObservableSet<Library> libCollection = FXCollections
             .observableSet(new TreeSet<>());
-    private DelayedEventProducer signalizer = new DelayedEventProducer(3000L);
+    private DelayedEventProducer signalizer;
 
     private Manager() {
+        
     }
     
     public static Manager getInstance() {
@@ -52,7 +56,9 @@ public class Manager {
     }
     
     public void start() {
-        // libCollection.addListener(new MyChangeListener());
+        
+        this.signalizer = new DelayedEventProducer(3 * 1000L);
+        libCollection.addListener(new MyChangeListener());
         
         config = ApplicationConfig.getInstance();
         LOGGER.info("operation executor is starting...");
@@ -92,6 +98,10 @@ public class Manager {
         return libCollection;
     }
     
+    public Set<Library> getLibrarySet() {
+        return getLibCollection().stream().collect(Collectors.toSet());
+    }
+    
 
     public void opAddLib(JarLibrary lib) {
         libCollection.add(lib);
@@ -115,5 +125,4 @@ public class Manager {
             signalizer.notifyObservers();
         }
     }
-    
 }

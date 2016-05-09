@@ -116,6 +116,7 @@ public class JarLibrary implements Library, Comparable<Library> {
         this.inheritedVersion = inheritedVersion;
     }
 
+    @Override
     public String getVersion() {
         return version.get();
     }
@@ -128,6 +129,7 @@ public class JarLibrary implements Library, Comparable<Library> {
         return version;
     }
 
+    @Override
     public String getGroupId() {
         return groupId.get();
     }
@@ -140,6 +142,7 @@ public class JarLibrary implements Library, Comparable<Library> {
         return groupId;
     }
 
+    @Override
     public String getArtifactId() {
         return artifactId.get();
     }
@@ -156,6 +159,7 @@ public class JarLibrary implements Library, Comparable<Library> {
         return originalName;
     }
 
+    @Override
     public File getOriginalFile() {
         return originalFile;
     }

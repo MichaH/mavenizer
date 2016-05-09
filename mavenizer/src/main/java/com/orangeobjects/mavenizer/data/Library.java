@@ -5,6 +5,8 @@
  */
 package com.orangeobjects.mavenizer.data;
 
+import java.io.File;
+
 /**
  *
  * @author michael
@@ -12,5 +14,9 @@ package com.orangeobjects.mavenizer.data;
 public interface Library {
     
     int getId();
+    public File getOriginalFile();
+    public String getGroupId();
+    public String getArtifactId();
+    public String getVersion();
     String getDisplayName();
 }
