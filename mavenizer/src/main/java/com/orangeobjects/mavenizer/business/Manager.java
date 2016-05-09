@@ -55,7 +55,7 @@ public class Manager {
             while (true) {
                 try {
                     Operation nextOperation = operationQ.take();
-                    if (nextOperation.getOperationType() == OperationType.SYSTEM_STOP_EXECUTOR) {
+                    if (nextOperation.getOperationType() == OperationType.SYSTEM_STOP) {
                         LOGGER.info("operation executor is ending...");
                         break;
                     }

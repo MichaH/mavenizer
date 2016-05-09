@@ -26,6 +26,6 @@ public class OperationStopExecutor extends AbstractOperation {
 
     @Override
     public OperationType getOperationType() {
-        return OperationType.SYSTEM_STOP_EXECUTOR;
+        return OperationType.SYSTEM_STOP;
     }
 }
