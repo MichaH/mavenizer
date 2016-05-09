@@ -9,7 +9,7 @@
 package com.orangeobjects.mavenizer.gui;
 
 import com.orangeobjects.mavenizer.business.Manager;
-import com.orangeobjects.mavenizer.business.operations.OperationStopExecutor;
+import com.orangeobjects.mavenizer.business.operations.OperationStopApplication;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,6 +49,6 @@ public class CoverController implements Initializable {
 
     @FXML
     private void closeApplication(ActionEvent event) {
-        Manager.getInstance().add(new OperationStopExecutor());
+        Manager.getInstance().opStopApplication();
     }
 }

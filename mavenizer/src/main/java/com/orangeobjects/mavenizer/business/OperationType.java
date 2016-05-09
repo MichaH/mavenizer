@@ -11,6 +11,6 @@ package com.orangeobjects.mavenizer.business;
  */
 public enum OperationType {
     
-    BUSINESS, SYSTEM_STOP
+    BUSINESS, SYSTEM_STOP_APPLICATION
     
 }

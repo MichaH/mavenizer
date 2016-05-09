@@ -13,7 +13,7 @@ import com.orangeobjects.mavenizer.business.OperationType;
  *
  * @author michael
  */
-public class OperationStopExecutor extends AbstractOperation {
+public class OperationStopApplication extends AbstractOperation {
 
     @Override
     public void execute() throws OperationException {
@@ -21,11 +21,11 @@ public class OperationStopExecutor extends AbstractOperation {
 
     @Override
     public String getName() {
-        return "stop executor";
+        return "stop application";
     }
 
     @Override
     public OperationType getOperationType() {
-        return OperationType.SYSTEM_STOP;
+        return OperationType.SYSTEM_STOP_APPLICATION;
     }
 }

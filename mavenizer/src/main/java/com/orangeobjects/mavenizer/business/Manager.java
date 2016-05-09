@@ -5,6 +5,7 @@
  */
 package com.orangeobjects.mavenizer.business;
 
+import com.orangeobjects.mavenizer.business.operations.OperationStopApplication;
 import com.orangeobjects.mavenizer.data.JarLibrary;
 import com.orangeobjects.mavenizer.data.Library;
 import java.util.TreeSet;
@@ -12,8 +13,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  *
@@ -55,7 +59,7 @@ public class Manager {
             while (true) {
                 try {
                     Operation nextOperation = operationQ.take();
-                    if (nextOperation.getOperationType() == OperationType.SYSTEM_STOP) {
+                    if (nextOperation.getOperationType() == OperationType.SYSTEM_STOP_APPLICATION) {
                         LOGGER.info("operation executor is ending...");
                         break;
                     }
@@ -67,6 +71,8 @@ public class Manager {
                     LOGGER.log(Level.SEVERE, null, ex);
                 }
             }
+            Platform.exit();
+            System.exit(0);
         }
     };
 
@@ -77,5 +83,16 @@ public class Manager {
 
     public void opAddLib(JarLibrary lib) {
         libCollection.add(lib);
+    }
+    
+    public void opStopApplication() {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setTitle("Confirmation");
+        a.setHeaderText("Do you really want to leave?");                      
+        a.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                Manager.getInstance().add(new OperationStopApplication());
+            }
+        });
     }
 }

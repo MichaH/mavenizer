@@ -1,6 +1,7 @@
 package com.orangeobjects.mavenizer;
 
 import com.orangeobjects.mavenizer.business.Manager;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +12,8 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
+    private final static Logger LOGGER = Logger.getLogger(MainApp.class.getName());
+
     @Override
     public void start(Stage stage) throws Exception {
         
@@ -20,7 +23,8 @@ public class MainApp extends Application {
         stage.setTitle("Mavenizer (c) OrangeObjects");
         
         
-        
+        stage.setOnCloseRequest(e -> Manager.getInstance().opStopApplication());
+
         
         stage.setScene(scene);
         stage.show();
@@ -28,8 +32,8 @@ public class MainApp extends Application {
 
     @Override
     public void stop() throws Exception {
-        System.out.println("stop was called");
-        super.stop(); //To change body of generated methods, choose Tools | Templates.
+        super.stop();
+        LOGGER.info("stop was called");
     }
 
     
