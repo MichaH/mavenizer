@@ -9,7 +9,6 @@
 package com.orangeobjects.mavenizer.gui;
 
 import com.orangeobjects.mavenizer.business.Manager;
-import com.orangeobjects.mavenizer.business.operations.OperationStopApplication;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,6 +30,8 @@ public class CoverController implements Initializable {
 
     @FXML
     private GridPane panCollectionData;
+    @FXML
+    private GridPane pagMavenScriptPane;
     
     /**
      * Initializes the controller class.
@@ -38,8 +39,10 @@ public class CoverController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Libraries.fxml"));
-            panCollectionData.add(root, 0, 0);
+            Parent libraries = FXMLLoader.load(getClass().getResource("/fxml/Libraries.fxml"));
+            panCollectionData.add(libraries, 0, 0);
+            Parent mavenScript = FXMLLoader.load(getClass().getResource("/fxml/MavenScript.fxml"));
+            pagMavenScriptPane.add(mavenScript, 0, 0);
             
         } catch (IOException ex) {
             Logger.getLogger(CoverController.class.getName()).log(Level.SEVERE, null, ex);

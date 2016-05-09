@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -51,6 +52,8 @@ public class Manager {
     }
     
     public void start() {
+        // libCollection.addListener(new MyChangeListener());
+        
         config = ApplicationConfig.getInstance();
         LOGGER.info("operation executor is starting...");
         Thread executor = new Thread(operationExecutor);
@@ -104,4 +107,13 @@ public class Manager {
             }
         });
     }
+    
+    
+    private class MyChangeListener implements SetChangeListener<Library> {
+        @Override
+        public void onChanged(SetChangeListener.Change<? extends Library> change) {
+            signalizer.notifyObservers();
+        }
+    }
+    
 }
