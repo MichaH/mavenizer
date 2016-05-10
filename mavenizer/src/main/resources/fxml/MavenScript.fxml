@@ -1,14 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="547.0" prefWidth="528.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orangeobjects.mavenizer.gui.MavenScriptController">
+<AnchorPane id="AnchorPane" prefHeight="547.0" prefWidth="528.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orangeobjects.mavenizer.gui.MavenScriptController">
     <stylesheets>
         <URL value="@/styles/mavenscript.css" />
     </stylesheets>
    <children>
-      <TextArea fx:id="txaScriptText" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <FlowPane alignment="CENTER_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <CheckBox mnemonicParsing="false" text="wrap text">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </CheckBox>
+            <CheckBox mnemonicParsing="false" text="comment errors">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </CheckBox>
+         </children>
+      </FlowPane>
+      <FlowPane alignment="CENTER_RIGHT" prefHeight="40.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button mnemonicParsing="false" text="Refresh">
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Button mnemonicParsing="false" text="Save">
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Button mnemonicParsing="false" text="Clipboard">
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
+               <tooltip>
+                  <Tooltip text="Copy whole text to clipboard" wrapText="true" />
+               </tooltip>
+            </Button>
+         </children>
+      </FlowPane>
+      <TextArea fx:id="txaScriptText" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+         <font>
+            <Font name="Courier New" size="12.0" />
+         </font>
+      </TextArea>
    </children>
 </AnchorPane>
