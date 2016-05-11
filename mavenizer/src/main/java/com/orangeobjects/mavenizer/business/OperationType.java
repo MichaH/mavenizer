@@ -11,6 +11,6 @@ package com.orangeobjects.mavenizer.business;
  */
 public enum OperationType {
     
-    BUSINESS, SYSTEM_STOP_APPLICATION
+    BUSINESS, COPY_TO_CLIPBOARD, SYSTEM_STOP_APPLICATION
     
 }

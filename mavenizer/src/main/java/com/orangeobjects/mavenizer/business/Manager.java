@@ -11,7 +11,6 @@ import com.orangeobjects.mavenizer.data.Library;
 import com.orangeobjects.mavenizer.util.ApplicationConfig;
 import com.orangeobjects.mavenizer.util.DelayedEventProducer;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -104,7 +103,11 @@ public class Manager {
     
 
     public void opAddLib(JarLibrary lib) {
-        libCollection.add(lib);
+        boolean added = libCollection.add(lib);
+        if ( ! added) {
+            LOGGER.log(Level.INFO, "jar-Lib ''{0}'' has already been in collection",
+                    lib.getDisplayName());
+        }
     }
     
     public void opStopApplication() {

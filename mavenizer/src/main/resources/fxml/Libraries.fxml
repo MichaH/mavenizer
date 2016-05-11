@@ -6,12 +6,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane id="AnchorPane" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orangeobjects.mavenizer.gui.LibrariesController">
+<AnchorPane id="AnchorPane" prefHeight="386.0" prefWidth="306.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orangeobjects.mavenizer.gui.LibrariesController">
     <stylesheets>
         <URL value="@/styles/libraries.css" />
     </stylesheets>
    <children>
-      <ScrollPane prefHeight="331.0" prefWidth="600.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ScrollPane fitToHeight="true" fitToWidth="true" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
             <Accordion fx:id="accLibList" />
          </content>

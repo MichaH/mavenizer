@@ -18,12 +18,12 @@
       <HBox alignment="CENTER" prefWidth="40.0" spacing="8.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <CheckBox fx:id="cbxWrapText" mnemonicParsing="false" onAction="#cbxWrapTextHandler" selected="true" text="wrap text" />
-            <CheckBox mnemonicParsing="false" text="comment errors" />
+            <CheckBox fx:id="cbxCommentErrors" mnemonicParsing="false" text="comment errors" />
             <HBox alignment="TOP_RIGHT" spacing="8.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button mnemonicParsing="false" text="Refresh" />
+                  <Button fx:id="butRefresh" mnemonicParsing="false" text="Refresh" />
                   <Button mnemonicParsing="false" text="Save" />
-                  <Button mnemonicParsing="false" text="Clipboard">
+                  <Button fx:id="butClipboard" mnemonicParsing="false" text="Clipboard">
                      <tooltip>
                         <Tooltip text="Copy whole text to clipboard" wrapText="true" />
                      </tooltip>

@@ -8,6 +8,7 @@
 package com.orangeobjects.mavenizer.data;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -173,6 +174,24 @@ public class JarLibrary implements Library, Comparable<Library> {
         return this.getDisplayName().compareTo(o.getDisplayName());
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        assert obj != null;
+        if ( ! (obj instanceof Library)) {
+            return false;
+        }
+        Library other = (Library)obj;
+        return this.getOriginalFile().getAbsolutePath().equals(
+                other.getOriginalFile().getAbsolutePath());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.originalFile.getAbsolutePath());
+        return hash;
+    }
+    
     @Override
     public int getId() {
         return id;
