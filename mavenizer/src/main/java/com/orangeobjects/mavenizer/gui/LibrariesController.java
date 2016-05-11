@@ -50,8 +50,8 @@ public class LibrariesController implements Initializable {
     static final Logger LOGGER = Logger.getLogger(LibrariesController.class.getName());
     private final static ApplicationConfig config = ApplicationConfig.getInstance();
     
-    private final Optional<File> optInitialDir = Optional.empty();
-    private final Optional<File> optLastDir = Optional.empty();
+    private Optional<File> optInitialDir = Optional.empty();
+    private Optional<File> optLastDir = Optional.empty();
     
     @FXML
     private Accordion accLibList;
@@ -111,11 +111,7 @@ public class LibrariesController implements Initializable {
 
     @FXML
     private void addButtonAction(MouseEvent event) {
-        List<File> fileList = selectFiles();
-        if ((fileList == null) || (fileList.isEmpty())) {
-            return;
-        }
-        fileList.forEach(f -> {
+        selectFiles().forEach(f -> {
             OperationAddLib op = new OperationAddLib(f);
             Manager.getInstance().add(op);
         });
@@ -123,26 +119,42 @@ public class LibrariesController implements Initializable {
 
     private List<File> selectFiles() {
         try {
-            String dirName = config.getProperty("filechooser.initialDirectory", null);
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select Java Library");
-            if (StringUtils.isNotBlank(dirName)) {
-                File initialDir = new File(dirName);
-                if (initialDir.canRead() && initialDir.isDirectory()) {
-                    fileChooser.setInitialDirectory(initialDir);
-                }
-            }
+            fileChooser.setInitialDirectory(getEffectiveDirectory());
             fileChooser.getExtensionFilters().addAll(
                     new ExtensionFilter("Library Files", "*.jar", "*.zip", "*.lib", "*.ear", "*.war"),
                     new ExtensionFilter("All Files", "*.*"));
-            return fileChooser.showOpenMultipleDialog(null);
-        } catch (InterruptedException | TimeoutException | ValidatorException ex) {
+            List<File> fileList = fileChooser.showOpenMultipleDialog(null);
+            if ((fileList == null) || (fileList.isEmpty())) {
+                return Collections.EMPTY_LIST;
+            } else  {
+                File firstFile = fileList.get(0);
+                optLastDir = Optional.of(firstFile.getParentFile());
+                return fileList;
+            }
+        } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "can't read property", ex);
             return Collections.EMPTY_LIST;
         }
     }
     
-    private Optional<File> getEffectiveDirectory() {
-        throw new RuntimeException("not yet implemented");
+    private File getEffectiveDirectory() {
+        return optLastDir.orElse(optInitialDir.orElseGet(() -> {
+            try {
+                String dirName = config.getProperty("filechooser.initialDirectory", null);
+                if (StringUtils.isNotBlank(dirName)) {
+                    File initialDir = new File(dirName);
+                    if (initialDir.canRead() && initialDir.isDirectory()) {
+                        optInitialDir = Optional.of(initialDir);
+                        optLastDir = Optional.of(initialDir);
+                        return initialDir;
+                    }
+                }
+            } catch (InterruptedException | TimeoutException | ValidatorException ex) {
+                LOGGER.log(Level.SEVERE, "can't read property", ex);
+            }
+            return null;
+        }));
     }
 }
