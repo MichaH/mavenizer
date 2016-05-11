@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -47,6 +49,9 @@ public class LibrariesController implements Initializable {
 
     static final Logger LOGGER = Logger.getLogger(LibrariesController.class.getName());
     private final static ApplicationConfig config = ApplicationConfig.getInstance();
+    
+    private final Optional<File> optInitialDir = Optional.empty();
+    private final Optional<File> optLastDir = Optional.empty();
     
     @FXML
     private Accordion accLibList;
@@ -135,5 +140,9 @@ public class LibrariesController implements Initializable {
             LOGGER.log(Level.SEVERE, "can't read property", ex);
             return Collections.EMPTY_LIST;
         }
+    }
+    
+    private Optional<File> getEffectiveDirectory() {
+        throw new RuntimeException("not yet implemented");
     }
 }

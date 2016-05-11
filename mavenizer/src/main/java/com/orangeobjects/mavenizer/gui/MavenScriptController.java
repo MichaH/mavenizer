@@ -14,8 +14,10 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 
 /**
@@ -29,6 +31,15 @@ public class MavenScriptController implements Initializable, Observer {
     
     @FXML
     TextArea txaScriptText;
+    @FXML
+    CheckBox cbxWrapText;
+    
+    @FXML
+    public void cbxWrapTextHandler(ActionEvent event) {
+        Platform.runLater(() -> {
+            txaScriptText.setWrapText(cbxWrapText.isSelected());
+        });
+    }
 
     /**
      * Initializes the controller class.
