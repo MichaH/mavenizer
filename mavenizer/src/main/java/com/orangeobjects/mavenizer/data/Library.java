@@ -6,12 +6,20 @@
 package com.orangeobjects.mavenizer.data;
 
 import java.io.File;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
  * @author michael
  */
 public interface Library {
+    
+    public static final ObservableList<String> SCOPE_LIST
+            = FXCollections.observableArrayList("", "compile", "provided", 
+                    "runtime", "test", "system", "import");
+    public static final ObservableList<String> TYPE_LIST 
+            = FXCollections.observableArrayList("", "jar");
     
     int getId();
     public File getOriginalFile();
