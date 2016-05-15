@@ -10,6 +10,7 @@ package com.orangeobjects.mavenizer.gui;
 
 import com.orangeobjects.mavenizer.business.Manager;
 import com.orangeobjects.mavenizer.business.operations.OperationCopyToClipboard;
+import com.orangeobjects.mavenizer.data.Library;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
@@ -44,6 +45,19 @@ public class MavenScriptController implements Initializable, Observer {
     @FXML
     Button butRefresh;
 
+    /**
+     * Initializes the controller class.
+     * @param url
+     * @param rb
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        Manager.getInstance().getSignalizer().addObserver(this);
+        butRefresh.setOnAction(handleRefresh);
+        butClipboard.setOnAction(handleClipboard);
+        cbxCommentErrors.setOnAction(handleCommentErrors);
+    }
+
     private final EventHandler<ActionEvent> handleClipboard = event -> {
         Manager.getInstance().add(
                 new OperationCopyToClipboard(txaScriptText)
@@ -65,17 +79,6 @@ public class MavenScriptController implements Initializable, Observer {
         });
     }
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        Manager.getInstance().getSignalizer().addObserver(this);
-        butRefresh.setOnAction(handleRefresh);
-        butClipboard.setOnAction(handleClipboard);
-        cbxCommentErrors.setOnAction(handleCommentErrors);
-    }
-
     @Override
     public void update(Observable o, Object arg) {
         updateInternal();
@@ -84,23 +87,29 @@ public class MavenScriptController implements Initializable, Observer {
     private void updateInternal() {
         StringBuilder sb = new StringBuilder();
         Manager.getInstance().getLibrarySet().forEach(lib -> {
-            boolean isError = cbxCommentErrors.isSelected()
-                    && (StringUtils.isBlank(lib.getArtifactId())
-                    || StringUtils.isBlank(lib.getGroupId())
-                    || StringUtils.isBlank(lib.getVersion()));
-            if (isError) {
-                sb.append("# ");
+            if (lib.isInstall()) {
+                if (isError(lib)) {
+                    sb.append("# ");
+                }
+                sb.append("mvn install:install-file")
+                        .append(" -D").append("file=").append(lib.getOriginalFile().getAbsolutePath())
+                        .append(" -D").append("groupId=").append(lib.getArtifactId())
+                        .append(" -D").append("artifactId=").append(lib.getGroupId())
+                        .append(" -D").append("version=").append(lib.getVersion())
+                        .append(" -D").append("packaging=jar").append(NL);
             }
-            sb.append("mvn install:install-file")
-                    .append(" -D").append("file=").append(lib.getOriginalFile().getAbsolutePath())
-                    .append(" -D").append("groupId=").append(lib.getArtifactId())
-                    .append(" -D").append("artifactId=").append(lib.getGroupId())
-                    .append(" -D").append("version=").append(lib.getVersion())
-                    .append(" -D").append("packaging=jar").append(NL);
         });
         Platform.runLater(() -> {
             txaScriptText.setText(sb.toString());
         });
     }
-
+    
+    private boolean isError(Library lib) {
+        return cbxCommentErrors.isSelected() && (
+            StringUtils.isBlank(lib.getArtifactId()) 
+         || StringUtils.isBlank(lib.getGroupId()) 
+         || StringUtils.isBlank(lib.getVersion())
+        );
+    }
 }
+

@@ -12,8 +12,6 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -85,13 +83,6 @@ public class LibraryNodeController implements Initializable {
         // now, after we filled all widgets, we install the
         // different listeners
         
-        this.signalizer = new DelayedEventProducer(2 * 1000L);
-        signalizer.addObserver(new Observer() {
-            @Override
-            public void update(Observable o, Object arg) {
-                System.out.println("HAAAAAAAAAALLO");
-            }
-        });
     }
     
     /**
@@ -101,6 +92,14 @@ public class LibraryNodeController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        this.signalizer = new DelayedEventProducer(2 * 1000L);
+        signalizer.addObserver(new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                System.out.println("HAAAAAAAAAALLO");
+            }
+        });
         
         chxScope.setItems(Library.SCOPE_LIST);
         chxScope.setValue(Library.SCOPE_LIST.get(1));
