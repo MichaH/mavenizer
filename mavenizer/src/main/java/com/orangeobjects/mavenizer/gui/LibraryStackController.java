@@ -5,7 +5,6 @@
  */
 package com.orangeobjects.mavenizer.gui;
 
-import com.orangeobjects.mavenizer.MainApp;
 import com.orangeobjects.mavenizer.business.AbstractOperation;
 import com.orangeobjects.mavenizer.business.Manager;
 import com.orangeobjects.mavenizer.business.OperationException;
@@ -35,13 +34,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +55,7 @@ public class LibraryStackController implements Initializable {
     static final Logger LOGGER = Logger.getLogger(LibraryStackController.class.getName());
     private final static ApplicationConfig config = ApplicationConfig.getInstance();
     
+    private DropShadow borderGlow = getBorderGlowEffect();
     private Optional<File> optInitialDir = Optional.empty();
     private Optional<File> optLastDir = Optional.empty();
     
@@ -80,62 +79,69 @@ public class LibraryStackController implements Initializable {
 //        butAdd.setGraphic(new ImageView(image1));
 
         // initialize plus
-        final Image image2 = new Image(MainApp.class.getResourceAsStream("/images/RemoveFromList.png"));
-        hbxTrashcan.getChildren().add(new ImageView(image2));
+//        final Image image2 = new Image(MainApp.class.getResourceAsStream("/images/RemoveFromList.png"));
+//        hbxTrashcan.getChildren().add(new ImageView(image2));
         
         butAdd.setOnAction(handleAdd);
         
         
-        hbxTrashcan.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                /* data is dragged over the target */
-                /* accept it only if it is not dragged from the same node 
-                 * and if it has a string data */
-                if (event.getGestureSource() != hbxTrashcan
-                        && event.getDragboard().hasString()) {
-                    /* allow for both copying and moving, whatever user chooses */
-                    event.acceptTransferModes(TransferMode.MOVE);
-                    
-                }
-                event.consume();
+        hbxTrashcan.setOnDragOver((DragEvent event) -> {
+            /* data is dragged over the target */
+            /* accept it only if it is not dragged from the same node
+            * and if it has a string data */
+            if (event.getGestureSource() != hbxTrashcan
+                    && event.getDragboard().hasString()) {
+                /* allow for both copying and moving, whatever user chooses */
+                event.acceptTransferModes(TransferMode.MOVE);
+                
             }
+            event.consume();
         });
         
-        hbxTrashcan.setOnDragEntered(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                /* the drag-and-drop gesture entered the target */
-                /* show to the user that it is an actual gesture target */
-                if (event.getGestureSource() != hbxTrashcan
-                        && event.getDragboard().hasString()) {
-                    hbxTrashcan.setBackground(Background.EMPTY);
-                }
-                event.consume();
+        hbxTrashcan.setOnDragEntered((DragEvent event) -> {
+            /* the drag-and-drop gesture entered the target */
+            /* show to the user that it is an actual gesture target */
+            if (event.getGestureSource() != hbxTrashcan
+                    && event.getDragboard().hasString()) {
+                Platform.runLater(() -> {
+                    hbxTrashcan.setEffect(borderGlow);
+                });
             }
-        });  
+            event.consume();
+        });
         
-        hbxTrashcan.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                /* data dropped */
-                /* if there is a string data on dragboard, read it and use it */
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasString()) {
-                    int id = Integer.parseInt(db.getString());
-                    AbstractOperation op = new OperationRemoveLib(id);
-                    Manager.getInstance().add(op);                    
-                    success = true;
-                }
-                /* let the source know whether the string was successfully 
-                 * transferred and used */
-                event.setDropCompleted(success);
-                event.consume();
+        hbxTrashcan.setOnDragDropped((DragEvent event) -> {
+            /* data dropped */
+            /* if there is a string data on dragboard, read it and use it */
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                int id = Integer.parseInt(db.getString());
+                AbstractOperation op = new OperationRemoveLib(id);
+                Manager.getInstance().add(op);
+                success = true;
             }
+            /* let the source know whether the string was successfully
+            * transferred and used */
+            event.setDropCompleted(success);
+            event.consume();
+            Platform.runLater(() -> {
+                hbxTrashcan.setEffect(null);
+            });
         });       
     }
 
+    private static DropShadow getBorderGlowEffect() {
+        int depth = 70;
+        DropShadow borderGlow = new DropShadow();
+        borderGlow.setOffsetY(0f);
+        borderGlow.setOffsetX(0f);
+        borderGlow.setColor(Color.RED);
+        borderGlow.setWidth(depth);
+        borderGlow.setHeight(depth);
+        return borderGlow;
+    }
+        
     private class MyChangeListener implements SetChangeListener<Library> {
         @Override
         public void onChanged(Change<? extends Library> change) {

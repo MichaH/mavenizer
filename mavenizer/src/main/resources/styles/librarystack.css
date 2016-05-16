@@ -6,10 +6,18 @@
 
     .butAdd {
         -fx-background-image: url('../images/AddToList.png');
-    }
+        -fx-background-repeat: no-repeat;
+        -fx-background-position: center;    }
 
     #butAdd {
         -fx-background-image: url('../images/AddToList.png');
+        -fx-background-repeat: no-repeat;
+        -fx-background-position: center;    }
+    
+    #hbxTrashcan {
+        -fx-background-image: url('../images/RemoveFromList.png');
+        -fx-background-repeat: no-repeat;
+        -fx-background-position: center;
     }
     
 }
