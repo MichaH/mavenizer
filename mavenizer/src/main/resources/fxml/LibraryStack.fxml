@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="386.0" prefWidth="306.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orangeobjects.mavenizer.gui.LibraryStackController">
+    <stylesheets>
+        <URL value="@/styles/librarystack.css" />
+    </stylesheets>
+   <children>
+      <ScrollPane fitToHeight="true" fitToWidth="true" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="57.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <Accordion fx:id="accLibList" />
+         </content>
+      </ScrollPane>
+      <HBox layoutX="14.0" layoutY="340.0" opacity="0.8" prefHeight="56.0" prefWidth="54.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button id="butAdd" fx:id="butAdd" mnemonicParsing="false" prefHeight="48.0" prefWidth="48.0">
+               <HBox.margin>
+                  <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+               </HBox.margin>
+            </Button>
+            <HBox fx:id="hbxTrashcan" prefHeight="56.0" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
+            </HBox>
+         </children></HBox>
+   </children>
+</AnchorPane>

@@ -21,6 +21,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 
 /**
  * FXML Controller class
@@ -83,6 +87,21 @@ public class LibraryNodeController implements Initializable {
         // now, after we filled all widgets, we install the
         // different listeners
         
+        
+        patJarlibMainPanel.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                /* drag was detected, start a drag-and-drop gesture*/
+                /* allow any transfer mode */
+                Dragboard db = patJarlibMainPanel.startDragAndDrop(TransferMode.MOVE);
+
+                /* Put a string on a dragboard */
+                ClipboardContent content = new ClipboardContent();
+                content.putString(labId.getText());
+                db.setContent(content);
+
+                event.consume();
+            }
+        });
     }
     
     /**

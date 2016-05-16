@@ -109,6 +109,14 @@ public class Manager {
                     lib.getDisplayName());
         }
     }
+
+    public void opRemoveLib(Library lib) {
+        boolean removed = libCollection.remove(lib);
+        if ( ! removed) {
+            LOGGER.log(Level.INFO, "jar-Lib ''{0}'' couldn't been removed from collection",
+                    lib.getDisplayName());
+        }
+    }
     
     public void opStopApplication() {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);

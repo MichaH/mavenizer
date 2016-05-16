@@ -6,9 +6,11 @@
 package com.orangeobjects.mavenizer.gui;
 
 import com.orangeobjects.mavenizer.MainApp;
+import com.orangeobjects.mavenizer.business.AbstractOperation;
 import com.orangeobjects.mavenizer.business.Manager;
 import com.orangeobjects.mavenizer.business.OperationException;
 import com.orangeobjects.mavenizer.business.operations.OperationAddLib;
+import com.orangeobjects.mavenizer.business.operations.OperationRemoveLib;
 import com.orangeobjects.mavenizer.data.JarLibrary;
 import com.orangeobjects.mavenizer.data.Library;
 import com.orangeobjects.mavenizer.util.ApplicationConfig;
@@ -20,20 +22,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.SetChangeListener;
 import javafx.collections.SetChangeListener.Change;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -45,9 +52,9 @@ import org.apache.commons.validator.ValidatorException;
  *
  * @author michael
  */
-public class LibrariesController implements Initializable {
+public class LibraryStackController implements Initializable {
 
-    static final Logger LOGGER = Logger.getLogger(LibrariesController.class.getName());
+    static final Logger LOGGER = Logger.getLogger(LibraryStackController.class.getName());
     private final static ApplicationConfig config = ApplicationConfig.getInstance();
     
     private Optional<File> optInitialDir = Optional.empty();
@@ -56,9 +63,9 @@ public class LibrariesController implements Initializable {
     @FXML
     private Accordion accLibList;
     @FXML
-    private HBox hbxPlus;
-    @FXML
     private HBox hbxTrashcan;
+    @FXML
+    private Button butAdd;
 
     /**
      * Initializes the controller class.
@@ -69,17 +76,64 @@ public class LibrariesController implements Initializable {
         Manager.getInstance().getLibCollection().addListener(new MyChangeListener());
 
         // initialize trashcan
-        final ImageView imv1 = new ImageView();
-        final Image image1 = new Image(MainApp.class.getResourceAsStream("/images/Trash.png"));
-        imv1.setImage(image1);
-        hbxTrashcan.getChildren().add(imv1);
+//        final Image image1 = new Image(MainApp.class.getResourceAsStream("/images/AddToList.png"));
+//        butAdd.setGraphic(new ImageView(image1));
 
         // initialize plus
-        final ImageView imv2 = new ImageView();
-        final Image image2 = new Image(MainApp.class.getResourceAsStream("/images/Plus.png"));
-        imv2.setImage(image2);
-        hbxPlus.getChildren().add(imv2);
-
+        final Image image2 = new Image(MainApp.class.getResourceAsStream("/images/RemoveFromList.png"));
+        hbxTrashcan.getChildren().add(new ImageView(image2));
+        
+        butAdd.setOnAction(handleAdd);
+        
+        
+        hbxTrashcan.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                /* data is dragged over the target */
+                /* accept it only if it is not dragged from the same node 
+                 * and if it has a string data */
+                if (event.getGestureSource() != hbxTrashcan
+                        && event.getDragboard().hasString()) {
+                    /* allow for both copying and moving, whatever user chooses */
+                    event.acceptTransferModes(TransferMode.MOVE);
+                    
+                }
+                event.consume();
+            }
+        });
+        
+        hbxTrashcan.setOnDragEntered(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                /* the drag-and-drop gesture entered the target */
+                /* show to the user that it is an actual gesture target */
+                if (event.getGestureSource() != hbxTrashcan
+                        && event.getDragboard().hasString()) {
+                    hbxTrashcan.setBackground(Background.EMPTY);
+                }
+                event.consume();
+            }
+        });  
+        
+        hbxTrashcan.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                /* data dropped */
+                /* if there is a string data on dragboard, read it and use it */
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasString()) {
+                    int id = Integer.parseInt(db.getString());
+                    AbstractOperation op = new OperationRemoveLib(id);
+                    Manager.getInstance().add(op);                    
+                    success = true;
+                }
+                /* let the source know whether the string was successfully 
+                 * transferred and used */
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });       
     }
 
     private class MyChangeListener implements SetChangeListener<Library> {
@@ -93,6 +147,7 @@ public class LibrariesController implements Initializable {
                         JarLibrary jarLibrary = (JarLibrary) lib;
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LibraryNode.fxml"));
                         final TitledPane root = loader.load();
+                        root.setUserData(lib);
                         LibraryNodeController rootCtrl = loader.getController();
                         rootCtrl.equip(jarLibrary);
                         Platform.runLater(() -> {
@@ -102,6 +157,22 @@ public class LibrariesController implements Initializable {
                         // for future releases
                         throw new OperationException("unknown instance of lib");
                     }
+                } else if (change.wasRemoved()) {
+                    Library lib = change.getElementRemoved();
+                    assert lib != null;
+                    if (lib instanceof JarLibrary) {
+                        for (TitledPane tp : accLibList.getPanes()) {
+                            if (((Library)tp.getUserData()).getId() == lib.getId()) {
+                                Platform.runLater(() -> {
+                                    accLibList.getPanes().remove(tp);
+                                });
+                                break;
+                            }
+                        }
+                    } else {
+                        // for future releases
+                        throw new OperationException("unknown instance of lib: " + lib.getClass().getName());
+                    }
                 }
             } catch (IOException | OperationException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
@@ -109,13 +180,12 @@ public class LibrariesController implements Initializable {
         }
     }
 
-    @FXML
-    private void addButtonAction(MouseEvent event) {
-        selectFiles().forEach(f -> {
-            OperationAddLib op = new OperationAddLib(f);
+    private final EventHandler<ActionEvent> handleAdd = event -> {
+        selectFiles().forEach(file -> {
+            OperationAddLib op = new OperationAddLib(file);
             Manager.getInstance().add(op);
         });
-    }
+    };    
 
     private List<File> selectFiles() {
         try {

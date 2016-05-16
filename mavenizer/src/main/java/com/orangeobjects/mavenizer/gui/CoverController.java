@@ -39,7 +39,7 @@ public class CoverController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            Parent libraries = FXMLLoader.load(getClass().getResource("/fxml/Libraries.fxml"));
+            Parent libraries = FXMLLoader.load(getClass().getResource("/fxml/LibraryStack.fxml"));
             panCollectionData.add(libraries, 0, 0);
             Parent mavenScript = FXMLLoader.load(getClass().getResource("/fxml/MavenScript.fxml"));
             pagMavenScriptPane.add(mavenScript, 0, 0);

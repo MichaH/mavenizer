@@ -1,0 +1,15 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+
+    .butAdd {
+        -fx-background-image: url('../images/AddToList.png');
+    }
+
+    #butAdd {
+        -fx-background-image: url('../images/AddToList.png');
+    }
+    
+}
