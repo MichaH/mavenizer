@@ -1,7 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  O R A N G E   O B J E C T S
+ *  copyright by Orange Objects
+ * 
+ *  http://www.OrangeObjects.de
+ * 
+ *  $Id$
  */
 package com.orangeobjects.mavenizer.gui;
 
@@ -46,16 +49,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.ValidatorException;
 
 /**
- * FXML Controller class
+ * FXML LibraryStackController class
  *
- * @author michael
+ * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
  */
 public class LibraryStackController implements Initializable {
 
     static final Logger LOGGER = Logger.getLogger(LibraryStackController.class.getName());
-    private final static ApplicationConfig config = ApplicationConfig.getInstance();
+    private final static ApplicationConfig CONFIG = ApplicationConfig.getInstance();
     
-    private DropShadow borderGlow = getBorderGlowEffect();
+    private final static DropShadow borderGlow = getBorderGlowEffect();
     private Optional<File> optInitialDir = Optional.empty();
     private Optional<File> optLastDir = Optional.empty();
     
@@ -164,27 +167,52 @@ public class LibraryStackController implements Initializable {
                         throw new OperationException("unknown instance of lib");
                     }
                 } else if (change.wasRemoved()) {
-                    Library lib = change.getElementRemoved();
-                    assert lib != null;
-                    if (lib instanceof JarLibrary) {
-                        for (TitledPane tp : accLibList.getPanes()) {
-                            if (((Library)tp.getUserData()).getId() == lib.getId()) {
-                                Platform.runLater(() -> {
-                                    accLibList.getPanes().remove(tp);
-                                });
-                                break;
-                            }
-                        }
-                    } else {
-                        // for future releases
-                        throw new OperationException("unknown instance of lib: " + lib.getClass().getName());
-                    }
+                    removeTitledPane(change.getElementRemoved());
                 }
             } catch (IOException | OperationException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }
+    
+    /** Remove TitledPane identified by given Library from accordion
+     * 
+     * @param lib 
+     */
+    private void removeTitledPane(Library lib) {
+        assert lib != null;
+        searchTitledPane(lib)
+            .ifPresent(tp -> {
+                Platform.runLater(() -> {
+                    accLibList.getPanes().remove(tp);
+                });
+            });
+    }
+    
+    /** Find the TitledPane to the given Library using the Library-Id.
+     * 
+     * @param searchLib
+     * @return 
+     */
+    private Optional<TitledPane> searchTitledPane(Library searchLib) {
+        return accLibList.getPanes()
+                .stream()
+                .filter(tp -> getLibrary(tp).getId() == searchLib.getId())
+                .findFirst();
+    }
+    
+    /** Give us the internal UserData of the given TitledPane - should be a Library.
+     * 
+     * @param tp
+     * @return 
+     */
+    private Library getLibrary(TitledPane tp) {
+        assert tp.getUserData() != null;
+        assert tp.getUserData() instanceof Library;
+        return (Library)tp.getUserData();
+    }
+    
+    
 
     private final EventHandler<ActionEvent> handleAdd = event -> {
         selectFiles().forEach(file -> {
@@ -218,7 +246,7 @@ public class LibraryStackController implements Initializable {
     private File getEffectiveDirectory() {
         return optLastDir.orElse(optInitialDir.orElseGet(() -> {
             try {
-                String dirName = config.getProperty("filechooser.initialDirectory", null);
+                String dirName = CONFIG.getProperty("filechooser.initialDirectory", null);
                 if (StringUtils.isNotBlank(dirName)) {
                     File initialDir = new File(dirName);
                     if (initialDir.canRead() && initialDir.isDirectory()) {
