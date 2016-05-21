@@ -2,6 +2,7 @@ package com.orangeobjects.mavenizer;
 
 import com.orangeobjects.mavenizer.business.Manager;
 import com.orangeobjects.mavenizer.util.CommandLineArgs;
+import com.orangeobjects.mavenizer.util.UserResources;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -23,10 +24,7 @@ public class MainApp extends Application {
         scene.getStylesheets().add("/styles/cover.css");
         stage.setTitle("Mavenizer (c) OrangeObjects");
         
-        
         stage.setOnCloseRequest(e -> Manager.getInstance().opStopApplication());
-
-        
         stage.setScene(scene);
         stage.show();
     }
@@ -50,6 +48,7 @@ public class MainApp extends Application {
         
         CommandLineArgs cli = new CommandLineArgs(args) ;
         cli.parse();
+        
         
         Manager.getInstance().start();
         launch(args);

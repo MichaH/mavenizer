@@ -58,7 +58,9 @@ public class LibraryStackController implements Initializable {
     static final Logger LOGGER = Logger.getLogger(LibraryStackController.class.getName());
     private final static ApplicationConfig CONFIG = ApplicationConfig.getInstance();
     
-    private final static DropShadow borderGlow = getBorderGlowEffect();
+    public final static String FILECHOOSER_INITIAL_DIR = "filechooser.initialDirectory";
+    
+    private final static DropShadow BORDER_GLOW = getBorderGlowEffect();
     private Optional<File> optInitialDir = Optional.empty();
     private Optional<File> optLastDir = Optional.empty();
     
@@ -107,7 +109,7 @@ public class LibraryStackController implements Initializable {
             if (event.getGestureSource() != hbxTrashcan
                     && event.getDragboard().hasString()) {
                 Platform.runLater(() -> {
-                    hbxTrashcan.setEffect(borderGlow);
+                    hbxTrashcan.setEffect(BORDER_GLOW);
                 });
             }
             event.consume();
@@ -233,8 +235,12 @@ public class LibraryStackController implements Initializable {
             if ((fileList == null) || (fileList.isEmpty())) {
                 return Collections.EMPTY_LIST;
             } else  {
+                // we save the parent dir for further selects
                 File firstFile = fileList.get(0);
                 optLastDir = Optional.of(firstFile.getParentFile());
+                Manager.getInstance().getUserResources()
+                        .setProperty(FILECHOOSER_INITIAL_DIR, firstFile.getParent());
+                
                 return fileList;
             }
         } catch (Exception ex) {
@@ -246,7 +252,13 @@ public class LibraryStackController implements Initializable {
     private File getEffectiveDirectory() {
         return optLastDir.orElse(optInitialDir.orElseGet(() -> {
             try {
-                String dirName = CONFIG.getProperty("filechooser.initialDirectory", null);
+                String dirName = CONFIG.getProperty(FILECHOOSER_INITIAL_DIR, null);
+                // if the application configuration gives no hint, we have a look to
+                // the user resource file.
+                if (StringUtils.isBlank(dirName)) {
+                    dirName = Manager.getInstance().getUserResources()
+                            .getProperty(FILECHOOSER_INITIAL_DIR, null);
+                }
                 if (StringUtils.isNotBlank(dirName)) {
                     File initialDir = new File(dirName);
                     if (initialDir.canRead() && initialDir.isDirectory()) {

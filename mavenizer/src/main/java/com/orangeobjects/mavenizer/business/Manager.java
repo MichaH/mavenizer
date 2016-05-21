@@ -10,6 +10,7 @@ import com.orangeobjects.mavenizer.data.JarLibrary;
 import com.orangeobjects.mavenizer.data.Library;
 import com.orangeobjects.mavenizer.util.ApplicationConfig;
 import com.orangeobjects.mavenizer.util.DelayedEventProducer;
+import com.orangeobjects.mavenizer.util.UserResources;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
@@ -33,13 +34,17 @@ public class Manager {
     private final static Logger LOGGER = Logger.getLogger(Manager.class.getName());
     
     private ApplicationConfig config;
+    private final UserResources userResources;
+
     private BlockingQueue<Operation> operationQ = new LinkedBlockingQueue<>();
     private final ObservableSet<Library> libCollection = FXCollections
             .observableSet(new TreeSet<>());
     private DelayedEventProducer signalizer;
 
     private Manager() {
-        
+        // loading resource file from user home if possible
+        userResources = new UserResources();
+        userResources.load();
     }
     
     public static Manager getInstance() {
@@ -88,6 +93,7 @@ public class Manager {
                     LOGGER.log(Level.SEVERE, null, ex);
                 }
             }
+            userResources.save();
             Platform.exit();
             System.exit(0);
         }
@@ -135,5 +141,9 @@ public class Manager {
         public void onChanged(SetChangeListener.Change<? extends Library> change) {
             signalizer.notifyObservers();
         }
+    }
+    
+    public UserResources getUserResources() {
+        return userResources;
     }
 }
