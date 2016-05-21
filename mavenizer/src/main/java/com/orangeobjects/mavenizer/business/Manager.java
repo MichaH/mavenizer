@@ -61,7 +61,7 @@ public class Manager {
     
     public void start() {
         
-        this.signalizer = new DelayedEventProducer(3 * 1000L);
+        this.signalizer = new DelayedEventProducer(1500L);
         libCollection.addListener(new MyChangeListener());
         
         config = ApplicationConfig.getInstance();
