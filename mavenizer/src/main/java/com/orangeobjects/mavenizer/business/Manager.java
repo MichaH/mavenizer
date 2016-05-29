@@ -8,9 +8,13 @@ package com.orangeobjects.mavenizer.business;
 import com.orangeobjects.mavenizer.business.operations.OperationStopApplication;
 import com.orangeobjects.mavenizer.data.JarLibrary;
 import com.orangeobjects.mavenizer.data.Library;
+import com.orangeobjects.mavenizer.data.LibraryBean;
 import com.orangeobjects.mavenizer.util.ApplicationConfig;
-import com.orangeobjects.mavenizer.util.DelayedEventProducer;
+import com.orangeobjects.mavenizer.util.DelayedObserverable;
+import com.orangeobjects.mavenizer.util.SimpleObserverable;
 import com.orangeobjects.mavenizer.util.UserResources;
+import java.util.Observable;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
@@ -39,7 +43,8 @@ public class Manager {
     private BlockingQueue<Operation> operationQ = new LinkedBlockingQueue<>();
     private final ObservableSet<Library> libCollection = FXCollections
             .observableSet(new TreeSet<>());
-    private DelayedEventProducer signalizer;
+    private DelayedObserverable changedStructurAgent;
+    private final Observable changedContentAgent = new SimpleObserverable();
 
     private Manager() {
         // loading resource file from user home if possible
@@ -51,8 +56,34 @@ public class Manager {
         return ManagerHolder.INSTANCE;
     }
 
-    public DelayedEventProducer getSignalizer() {
-        return signalizer;
+    public void opUpdateLib(LibraryBean bean) {
+        LOGGER.log(Level.INFO, "opUpdateLib was called with: {0}", bean.toString());
+        libCollection.stream()
+                .filter(l -> l.getOriginalFile().getAbsolutePath()
+                        .equals(bean.getOriginalFile().getAbsolutePath()))
+                .filter(l -> {
+                    if (l.getLastDataVersionNo() == bean.getLastDataVersionNo()) {
+                        return true;
+                    } else {
+                        LOGGER.severe("version mismatch while updating");
+                        return false;
+                    }})
+                .map(l -> (JarLibrary) l)
+                .forEach(lib -> {
+                    lib.setGroupId(bean.getGroupId());
+                    lib.setInheritedGroupId(bean.isInheritedGroupId());
+                    lib.setArtifactId(bean.getArtifactId());
+                    lib.setVersion(bean.getVersion());
+                    lib.setInheritedVersion(bean.isInheritedVersion());
+                    lib.setScope(bean.getScope());
+                    lib.setType(bean.getType());
+                    lib.setPomDependency(bean.isPomDependency());
+                    lib.setInstall(bean.isInstall());
+                    lib.setLastCreator(bean.getLastCreator());
+                    LOGGER.info("lib was updated");
+                    changedContentAgent.notifyObservers(lib);
+                    LOGGER.info("changed content was send to listeners");
+                });
     }
     
     private static class ManagerHolder {
@@ -61,7 +92,7 @@ public class Manager {
     
     public void start() {
         
-        this.signalizer = new DelayedEventProducer(1500L);
+        this.changedStructurAgent = new DelayedObserverable(1500L);
         libCollection.addListener(new MyChangeListener());
         
         config = ApplicationConfig.getInstance();
@@ -139,11 +170,19 @@ public class Manager {
     private class MyChangeListener implements SetChangeListener<Library> {
         @Override
         public void onChanged(SetChangeListener.Change<? extends Library> change) {
-            signalizer.notifyObservers();
+            changedStructurAgent.notifyObservers();
         }
     }
     
     public UserResources getUserResources() {
         return userResources;
+    }
+    
+    public DelayedObserverable getChangedStructurAgent() {
+        return changedStructurAgent;
+    }
+
+    public Observable getChangedContentAgent() {
+        return changedContentAgent;
     }
 }

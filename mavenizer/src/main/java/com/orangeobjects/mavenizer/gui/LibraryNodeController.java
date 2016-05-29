@@ -5,13 +5,16 @@
  */
 package com.orangeobjects.mavenizer.gui;
 
+import com.orangeobjects.mavenizer.business.Manager;
+import com.orangeobjects.mavenizer.business.operations.OperationUpdateLibrary;
 import com.orangeobjects.mavenizer.data.JarLibrary;
 import com.orangeobjects.mavenizer.data.Library;
-import com.orangeobjects.mavenizer.util.DelayedEventProducer;
+import com.orangeobjects.mavenizer.data.LibraryBean;
+import com.orangeobjects.mavenizer.util.DelayedObserverable;
 import java.net.URL;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,6 +28,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * FXML Controller class
@@ -33,7 +37,7 @@ import javafx.scene.input.TransferMode;
  */
 public class LibraryNodeController implements Initializable {
 
-    private DelayedEventProducer signalizer;
+    private DelayedObserverable changedPropSignal;
     
     @FXML
     TitledPane patJarlibMainPanel;
@@ -54,7 +58,7 @@ public class LibraryNodeController implements Initializable {
     @FXML
     TextField ftxVersion;
     @FXML
-    TextField ftxNeWLibName;
+    TextField ftxNewLibName;
     
     @FXML
     CheckBox cbxGroupIdInherit;
@@ -71,7 +75,45 @@ public class LibraryNodeController implements Initializable {
     @FXML
     ChoiceBox<String> chxType;
     
+    private final String creator;
+    private JarLibrary lib;
+
+    
+    
+    public LibraryNodeController() {
+        // that's me, my controller id
+        creator = "LibraryNodeController-" + RandomStringUtils.randomAlphanumeric(10);
+    }
+    
+    /** 
+     * Copies all variable values from gui to bean (value object).
+     */
+    private LibraryBean panel2bean() {
+        return LibraryBean.build(lib.getOriginalFile())
+                .setGroupId(ftxGroupId.getText())
+                .setInheritedGroupId(cbxGroupIdInherit.isSelected())
+                .setArtifactId(ftxArtefactId.getText())
+                .setVersion(ftxVersion.getText())
+                .setInheritedVersion(cbxVersionInherit.isSelected())
+                .setPomDependency(cbxPom.isSelected())
+                .setInstall(cbxRepository.isSelected())
+                .setScope(chxScope.getValue())
+                .setType(chxType.getValue())
+                .setLastCreator(creator)
+                .setLastDataVersionNo(lib.getLastDataVersionNo());
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public void equip(JarLibrary lib) {
+        assert lib != null;
+        this.lib = lib;
         // set title
         patJarlibMainPanel.setText(lib.getOriginalFile().getName());
         // set all fields
@@ -87,6 +129,17 @@ public class LibraryNodeController implements Initializable {
         // now, after we filled all widgets, we install the
         // different listeners
         
+        changedPropSignal.addObserver((Observable o, Object arg) -> {
+            System.out.println("all observers will be be informed");
+            Manager.getInstance().add(new OperationUpdateLibrary(panel2bean()));
+        });
+        
+        Manager.getInstance().getChangedContentAgent().addObserver((Observable o, Object arg) -> {
+            Library newLib = (Library)arg;
+            Platform.runLater(() -> {
+                ftxNewLibName.setText(newLib.getNewLibraryName());
+            });
+        });
         
         patJarlibMainPanel.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
@@ -111,14 +164,8 @@ public class LibraryNodeController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        this.signalizer = new DelayedEventProducer(2 * 1000L);
-        signalizer.addObserver(new Observer() {
-            @Override
-            public void update(Observable o, Object arg) {
-                System.out.println("HAAAAAAAAAALLO");
-            }
-        });
+        // Two seconds is a good choice to propagate property changes
+        this.changedPropSignal = new DelayedObserverable(2 * 1000L);
         
         chxScope.setItems(Library.SCOPE_LIST);
         chxScope.setValue(Library.SCOPE_LIST.get(1));
@@ -154,7 +201,7 @@ public class LibraryNodeController implements Initializable {
     
     
     final void update() {
-        signalizer.notifyObservers();
+        changedPropSignal.notifyObservers();
     }
     
     @FXML

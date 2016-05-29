@@ -18,14 +18,14 @@ import java.util.logging.Logger;
  *
  * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
  */
-public class DelayedEventProducer extends Observable {
+public class DelayedObserverable extends Observable {
 
-    static final Logger LOGGER = Logger.getLogger(DelayedEventProducer.class.getName());
+    static final Logger LOGGER = Logger.getLogger(DelayedObserverable.class.getName());
 
     // if there is a lock, a timer is running
     private final AtomicBoolean timerActiv = new AtomicBoolean(false);
 
-    private final static long PER_ROUND = 500;   // ms
+    private long sleepingPeriod = 500;   // default 500ms
     private final AtomicLong countdown = new AtomicLong();
     private final long maxDelay;
 
@@ -33,8 +33,13 @@ public class DelayedEventProducer extends Observable {
      *  C o n s t r u c t o r
      **************************************************************************/
     
-    public DelayedEventProducer(long maxDelay) {
+    public DelayedObserverable(long maxDelay) {
         this.maxDelay = maxDelay;
+    }
+    
+    public DelayedObserverable(long maxDelay, long sleepingPeriod) {
+        this.maxDelay = maxDelay;
+        this.sleepingPeriod = sleepingPeriod;
     }
 
     /*  ***********************************************************************
@@ -48,10 +53,10 @@ public class DelayedEventProducer extends Observable {
         if (timerActiv.weakCompareAndSet(false, true)) {
             new Thread(() -> {
                 try {
-                    while (countdown.getAndAdd(PER_ROUND * (-1)) >= 0) {
-                        Thread.sleep(PER_ROUND);
+                    while (countdown.getAndAdd(sleepingPeriod * (-1)) >= 0) {
+                        Thread.sleep(sleepingPeriod);
                     }
-                    DelayedEventProducer.super.notifyObservers();
+                    DelayedObserverable.super.notifyObservers();
                 } catch (InterruptedException ex) {
                     LOGGER.log(Level.SEVERE, "error", ex);
                 } finally {

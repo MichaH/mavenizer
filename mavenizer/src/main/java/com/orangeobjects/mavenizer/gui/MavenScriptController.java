@@ -52,7 +52,8 @@ public class MavenScriptController implements Initializable, Observer {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Manager.getInstance().getSignalizer().addObserver(this);
+        Manager.getInstance().getChangedStructurAgent().addObserver(this);
+        Manager.getInstance().getChangedContentAgent().addObserver(this);
         butRefresh.setOnAction(handleRefresh);
         butClipboard.setOnAction(handleClipboard);
         cbxCommentErrors.setOnAction(handleCommentErrors);
@@ -92,16 +93,18 @@ public class MavenScriptController implements Initializable, Observer {
                     sb.append("# ");
                 }
                 sb.append("mvn install:install-file")
-                        .append(" -D").append("file=").append(lib.getOriginalFile().getAbsolutePath())
-                        .append(" -D").append("groupId=").append(lib.getArtifactId())
-                        .append(" -D").append("artifactId=").append(lib.getGroupId())
+                        .append(" -D").append("groupId=").append(lib.getGroupId())
+                        .append(" -D").append("artifactId=").append(lib.getArtifactId())
                         .append(" -D").append("version=").append(lib.getVersion())
-                        .append(" -D").append("packaging=jar").append(NL);
+                        .append(" -D").append("packaging=jar")
+                        .append(" -D").append("file=").append(lib.getOriginalFile().getAbsolutePath())
+                        .append(NL);
             }
         });
         Platform.runLater(() -> {
             txaScriptText.setText(sb.toString());
         });
+        System.out.println("maven list was re-written");
     }
     
     private boolean isError(Library lib) {

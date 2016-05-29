@@ -29,4 +29,9 @@ public interface Library {
     String getDisplayName();
     boolean isInstall();
     boolean isPomDependency();
+    String getNewLibraryName();
+    
+    String getLastCreator();
+    long getLastDataVersionNo();
+    
 }
