@@ -2,10 +2,8 @@ package com.orangeobjects.mavenizer;
 
 import com.orangeobjects.mavenizer.business.Manager;
 import com.orangeobjects.mavenizer.util.CommandLineArgs;
-import com.orangeobjects.mavenizer.util.UserResources;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

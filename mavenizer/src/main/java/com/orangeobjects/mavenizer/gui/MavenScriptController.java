@@ -15,9 +15,9 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class MavenScriptController implements Initializable, Observer {
 
+    private final static Logger LOGGER = Logger.getLogger(MavenScriptController.class.getName());
     private final static String NL = "\n";
 
     @FXML
@@ -52,26 +53,23 @@ public class MavenScriptController implements Initializable, Observer {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        // This controller is interested in all changes regarding to the lib collection
         Manager.getInstance().getChangedStructurAgent().addObserver(this);
+        // This controller is furthermore interested in all changes regarding to the lib collection
         Manager.getInstance().getChangedContentAgent().addObserver(this);
-        butRefresh.setOnAction(handleRefresh);
-        butClipboard.setOnAction(handleClipboard);
-        cbxCommentErrors.setOnAction(handleCommentErrors);
+        
+        // Action for button 'refresh'
+        butRefresh.setOnAction(event -> updateInternal());
+        // Action for button 'comment on error'
+        cbxCommentErrors.setOnAction(event -> updateInternal());
+        // Action for button 'clipboard'
+        butClipboard.setOnAction(event -> {
+            Manager.getInstance().add(
+                    new OperationCopyToClipboard(txaScriptText)
+            );
+        });
     }
-
-    private final EventHandler<ActionEvent> handleClipboard = event -> {
-        Manager.getInstance().add(
-                new OperationCopyToClipboard(txaScriptText)
-        );
-    };
-
-    private final EventHandler<ActionEvent> handleRefresh = event -> {
-        updateInternal();
-    };
-
-    private final EventHandler<ActionEvent> handleCommentErrors = event -> {
-        updateInternal();
-    };
     
     @FXML
     public void cbxWrapTextHandler(ActionEvent event) {
@@ -104,7 +102,7 @@ public class MavenScriptController implements Initializable, Observer {
         Platform.runLater(() -> {
             txaScriptText.setText(sb.toString());
         });
-        System.out.println("maven list was re-written");
+        LOGGER.fine("maven list was re-written");
     }
     
     private boolean isError(Library lib) {
