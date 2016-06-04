@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import org.apache.commons.lang3.StringUtils;
 

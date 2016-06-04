@@ -9,16 +9,19 @@
 package com.orangeobjects.mavenizer.gui;
 
 import com.orangeobjects.mavenizer.business.Manager;
+import com.orangeobjects.mavenizer.business.operations.OperationRemoveAll;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -32,6 +35,8 @@ public class CoverController implements Initializable {
     private GridPane panCollectionData;
     @FXML
     private GridPane pagMavenScriptPane;
+    @FXML
+    MenuItem mitDeleteAll;
     
     /**
      * Initializes the controller class.
@@ -47,6 +52,10 @@ public class CoverController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(CoverController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        mitDeleteAll.setOnAction(event -> {
+            Manager.getInstance().add(new OperationRemoveAll());
+        });
     }    
     
 

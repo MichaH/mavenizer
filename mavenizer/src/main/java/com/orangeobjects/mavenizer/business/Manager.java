@@ -85,7 +85,7 @@ public class Manager {
                     LOGGER.info("changed content was send to listeners");
                 });
     }
-    
+
     private static class ManagerHolder {
         private static final Manager INSTANCE = new Manager();
     }
@@ -147,6 +147,10 @@ public class Manager {
         }
     }
 
+    public void opRemoveAllLibraries() {
+        libCollection.clear();
+    }
+    
     public void opRemoveLib(Library lib) {
         boolean removed = libCollection.remove(lib);
         if ( ! removed) {
