@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -37,7 +36,9 @@ public class CoverController implements Initializable {
     private GridPane pagMavenScriptPane;
     @FXML
     MenuItem mitDeleteAll;
-    
+    @FXML
+    MenuItem mitAbout;
+
     /**
      * Initializes the controller class.
      */
@@ -48,19 +49,30 @@ public class CoverController implements Initializable {
             panCollectionData.add(libraries, 0, 0);
             Parent mavenScript = FXMLLoader.load(getClass().getResource("/fxml/MavenScript.fxml"));
             pagMavenScriptPane.add(mavenScript, 0, 0);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(CoverController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         mitDeleteAll.setOnAction(event -> {
             Manager.getInstance().add(new OperationRemoveAll());
         });
-    }    
-    
+
+        mitAbout.setOnAction(event -> {
+            try {
+                FXMLLoader aboutLoader = new FXMLLoader(getClass().getResource("/fxml/About.fxml"));
+                final Parent root = aboutLoader.load();
+                AboutController aboutCtrl = aboutLoader.getController();
+                aboutCtrl.start(root);
+            } catch (IOException ex) {
+                Logger.getLogger(CoverController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
 
     @FXML
     private void closeApplication(ActionEvent event) {
         Manager.getInstance().opStopApplication();
     }
+
 }
