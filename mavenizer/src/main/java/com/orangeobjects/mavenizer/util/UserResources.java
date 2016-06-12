@@ -66,10 +66,14 @@ public class UserResources extends Properties {
     }
     
     private Optional<File> getResourceFile() {
+        Optional<File> userHomeDir = getUserHomeDir();
+        return userHomeDir.isPresent() ? 
+                Optional.of(new File(userHomeDir.get(), RC_FILEPATH)) : Optional.empty();
+    }
+    
+    public static Optional<File> getUserHomeDir() {
         String userHomeStr = System.getProperty("user.home");
-        if (StringUtils.isBlank(userHomeStr)) {
-            return Optional.empty();
-        }
-        return Optional.of(new File(userHomeStr, RC_FILEPATH));
+        return StringUtils.isBlank(userHomeStr) ?
+                Optional.empty() : Optional.of(new File(userHomeStr));
     }
 }

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -10,7 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="547.0" prefWidth="528.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orangeobjects.mavenizer.gui.MavenScriptController">
+<AnchorPane id="AnchorPane" prefHeight="547.0" prefWidth="528.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orangeobjects.mavenizer.gui.MavenScriptController">
     <stylesheets>
         <URL value="@/styles/mavenscript.css" />
     </stylesheets>
@@ -22,7 +28,7 @@
             <HBox alignment="TOP_RIGHT" spacing="8.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button fx:id="butRefresh" mnemonicParsing="false" text="Refresh" />
-                  <Button mnemonicParsing="false" text="Save" />
+                  <Button fx:id="butSave" mnemonicParsing="false" text="Save" />
                   <Button fx:id="butClipboard" mnemonicParsing="false" text="Clipboard">
                      <tooltip>
                         <Tooltip text="Copy whole text to clipboard" wrapText="true" />
