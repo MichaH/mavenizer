@@ -138,8 +138,6 @@ public class MavenScriptController implements Initializable, Observer {
             File saveFile = fileChooser.showSaveDialog(null);
             if (saveFile != null) {
                 FileUtils.writeStringToFile(saveFile, buildScriptLines().toString());
-            } else {
-                LOGGER.log(Level.SEVERE, "can''t write to file {0}", saveFile.getAbsolutePath());
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "error while save to file", ex);
