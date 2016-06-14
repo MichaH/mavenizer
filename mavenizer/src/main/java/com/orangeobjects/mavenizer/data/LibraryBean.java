@@ -21,10 +21,10 @@ public class LibraryBean {
     
     private final File originalFile;                  // example: /src/target/wordTrans-2.3.jar
     
-    private boolean inheritedGroupId = true;
+    private boolean inheritedGroupId;
     private String groupId;
     private String artifactId;
-    private boolean inheritedVersion = true;
+    private boolean inheritedVersion;
     private String version;
     private String scope;
     private String type;

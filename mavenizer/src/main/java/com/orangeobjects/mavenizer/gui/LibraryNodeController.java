@@ -126,6 +126,9 @@ public class LibraryNodeController implements Initializable {
         ftxArtefactId.setText(lib.getArtifactId());
         ftxVersion.setText(lib.getVersion());
         
+        cbxVersionInherit.setSelected(lib.isInheritedVersion());
+        cbxGroupIdInherit.setSelected(lib.isInheritedGroupId());
+        
         // now, after we filled all widgets, we install the
         // different listeners
         

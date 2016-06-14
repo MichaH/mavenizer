@@ -26,6 +26,8 @@ public interface Library {
     public String getGroupId();
     public String getArtifactId();
     public String getVersion();
+    public String getScope();
+    public String getType();
     String getDisplayName();
     boolean isInstall();
     boolean isPomDependency();

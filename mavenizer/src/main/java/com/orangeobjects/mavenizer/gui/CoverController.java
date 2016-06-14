@@ -35,6 +35,8 @@ public class CoverController implements Initializable {
     @FXML
     private GridPane pagMavenScriptPane;
     @FXML
+    private GridPane pagMavenPomPane;
+    @FXML
     MenuItem mitDeleteAll;
     @FXML
     MenuItem mitAbout;
@@ -47,6 +49,8 @@ public class CoverController implements Initializable {
         try {
             Parent libraries = FXMLLoader.load(getClass().getResource("/fxml/LibraryStack.fxml"));
             panCollectionData.add(libraries, 0, 0);
+            Parent mavenPom = FXMLLoader.load(getClass().getResource("/fxml/MavenPom.fxml"));
+            pagMavenPomPane.add(mavenPom, 0, 0);
             Parent mavenScript = FXMLLoader.load(getClass().getResource("/fxml/MavenScript.fxml"));
             pagMavenScriptPane.add(mavenScript, 0, 0);
 

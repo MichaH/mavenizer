@@ -55,8 +55,11 @@ public class JarLibrary extends LibraryBean implements Library, Comparable<Libra
                 Optional.of(m.group(2)) : Optional.empty();
         
         setArtifactId(getOriginalArtefactname());
+        
+        setInheritedVersion( ! optOriginalVersion.isPresent());
         setVersion(optOriginalVersion.orElse(null));
         
+        setInheritedGroupId(true);
     }
     
     public String getOriginalName() {
@@ -103,4 +106,16 @@ public class JarLibrary extends LibraryBean implements Library, Comparable<Libra
     final public String getOriginalArtefactname() {
         return originalArtefactname;
     }
+
+    @Override
+    public String getGroupId() {
+        return isInheritedGroupId() ? "net.foo.unknown" :  super.getGroupId();
+    }
+
+    @Override
+    public String getVersion() {
+        return isInheritedVersion() ? "11.11" : super.getVersion();
+    }
+    
+    
 }

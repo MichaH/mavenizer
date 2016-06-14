@@ -14,7 +14,6 @@ import com.orangeobjects.mavenizer.util.DelayedObserverable;
 import com.orangeobjects.mavenizer.util.SimpleObserverable;
 import com.orangeobjects.mavenizer.util.UserResources;
 import java.util.Observable;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
