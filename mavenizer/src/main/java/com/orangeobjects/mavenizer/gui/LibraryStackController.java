@@ -58,7 +58,7 @@ public class LibraryStackController implements Initializable {
     static final Logger LOGGER = Logger.getLogger(LibraryStackController.class.getName());
     private final static ApplicationConfig CONFIG = ApplicationConfig.getInstance();
     
-    public final static String FILECHOOSER_INITIAL_DIR = "filechooser.initialDirectory";
+    public final static String FILECHOOSER_INITIAL_DIR = "mavenizer.filechooser.initialDirectory";
     
     private final static DropShadow BORDER_GLOW = getBorderGlowEffect();
     private Optional<File> optInitialDir = Optional.empty();
@@ -253,12 +253,14 @@ public class LibraryStackController implements Initializable {
         return optLastDir.orElse(optInitialDir.orElseGet(() -> {
             try {
                 String dirName = CONFIG.getProperty(FILECHOOSER_INITIAL_DIR, null);
+                LOGGER.log(Level.FINE, "initial dir (props) is {0}",dirName);
                 // if the application configuration gives no hint, we have a look to
                 // the user resource file.
                 if (StringUtils.isBlank(dirName)) {
                     dirName = Manager.getInstance().getUserResources()
                             .getProperty(FILECHOOSER_INITIAL_DIR, null);
                 }
+                LOGGER.log(Level.FINE, "initial dir is {0}", dirName);
                 if (StringUtils.isNotBlank(dirName)) {
                     File initialDir = new File(dirName);
                     if (initialDir.canRead() && initialDir.isDirectory()) {

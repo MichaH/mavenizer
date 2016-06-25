@@ -21,14 +21,14 @@ import org.apache.commons.validator.ValidatorException;
 public class ApplicationConfig {
 
     static final Logger LOGGER = Logger.getLogger(ApplicationConfig.class.getName());
-    
+
     public final static String PATH_TO_CONFIG = "com.orangeobjects.mavenizer.config.path";
     private Properties properties = null;
-    
+
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-    private final Lock read  = readWriteLock.readLock();
+    private final Lock read = readWriteLock.readLock();
     private final Lock write = readWriteLock.writeLock();
-    
+
     public ApplicationConfig() {
         try {
             load();
@@ -36,7 +36,7 @@ public class ApplicationConfig {
             LOGGER.severe(ex.getMessage());
         }
     }
-    
+
     public static ApplicationConfig getInstance() {
         return ApplicationConfigHolder.INSTANCE;
     }
@@ -45,7 +45,7 @@ public class ApplicationConfig {
 
         private static final ApplicationConfig INSTANCE = new ApplicationConfig();
     }
-    
+
     private void load() throws ValidatorException, IOException {
         String path = System.getProperty(PATH_TO_CONFIG);
         if (StringUtils.isBlank(path)) {
@@ -54,22 +54,23 @@ public class ApplicationConfig {
         }
         LOGGER.log(Level.INFO, "found application configuration system property: {0}", path);
         File file = new File(path);
-        if ( ! file.exists() || ! file.canRead()) {
-            throw new IOException("configuration file " 
+        if (!file.exists() || !file.canRead()) {
+            throw new IOException("configuration file "
                     + file.getCanonicalPath() + " is unreadable");
         }
         if (write.tryLock()) {
             try {
-              properties = new Properties();
-              properties.load(new FileInputStream(file));
+                properties = new Properties();
+                properties.load(new FileInputStream(file));
+                printConfig();
             } finally {
-              write.unlock();
+                write.unlock();
             }
         }
         LOGGER.info("application configuration has been loaded");
     }
 
-    public String getProperty(String key) 
+    public String getProperty(String key)
             throws InterruptedException, TimeoutException, ValidatorException {
         if (read.tryLock(10, TimeUnit.SECONDS)) {
             try {
@@ -83,8 +84,8 @@ public class ApplicationConfig {
         }
         throw new TimeoutException("timeout while waiting for properties");
     }
-    
-    public String getProperty(String key, String defaultValue) 
+
+    public String getProperty(String key, String defaultValue)
             throws InterruptedException, TimeoutException, ValidatorException {
         if (read.tryLock(10, TimeUnit.SECONDS)) {
             try {
@@ -97,5 +98,13 @@ public class ApplicationConfig {
             }
         }
         throw new TimeoutException("timeout while waiting for properties");
-    }    
+    }
+    
+    public void printConfig() {
+        assert properties != null;
+        LOGGER.info("Properties\n");
+        properties.forEach((k,v) -> {
+            LOGGER.info(String.format("%40s = %s\n", k, v));
+        });
+    }
 }
