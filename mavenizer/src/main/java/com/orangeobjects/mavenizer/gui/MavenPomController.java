@@ -90,21 +90,26 @@ public class MavenPomController implements Initializable, Observer {
     private StringBuilder buildScriptLines() {
         StringBuilder sb = new StringBuilder();
         sb.append("    <dependencies>").append(NL);
-        Manager.getInstance().getLibrarySet().forEach(lib -> {
-            if (lib.isInstall()) {
-                if (isError(lib)) {
-                    sb.append("        <!-- ").append(NL);
-                }
-                sb.append("        <dependency>").append(NL);
-                sb.append("            <groupId>").append(lib.getGroupId()).append("</groupId>").append(NL);
-                sb.append("            <artifactId>").append(lib.getArtifactId()).append("</artifactId>").append(NL);
-                sb.append("            <version>").append(lib.getVersion()).append("</version>").append(NL);
+        Manager.getInstance().getLibrarySet()
+                .stream()
+                .filter(lib -> lib.isPomDependency())
+                .forEach(lib -> {
+            if (isError(lib)) {
+                sb.append("        <!-- ").append(NL);
+            }
+            sb.append("        <dependency>").append(NL);
+            sb.append("            <groupId>").append(lib.getGroupId()).append("</groupId>").append(NL);
+            sb.append("            <artifactId>").append(lib.getArtifactId()).append("</artifactId>").append(NL);
+            sb.append("            <version>").append(lib.getVersion()).append("</version>").append(NL);
+            if (StringUtils.isNotBlank(lib.getScope())) {
                 sb.append("            <scope>").append(lib.getScope()).append("</scope>").append(NL);
+            }
+            if (StringUtils.isNotBlank(lib.getType())) {
                 sb.append("            <type>").append(lib.getType()).append("</type>").append(NL);
-                sb.append("        </dependency>").append(NL);
-                if (isError(lib)) {
-                    sb.append("        -->").append(NL);
-                }
+            }
+            sb.append("        </dependency>").append(NL);
+            if (isError(lib)) {
+                sb.append("        -->").append(NL);
             }
         });
         sb.append("    </dependencies>").append(NL);
