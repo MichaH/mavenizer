@@ -5,6 +5,7 @@
  * http://www.OrangeObjects.de
  *
  */
+
 package com.orangeobjects.mavenizer.gui;
 
 import com.orangeobjects.mavenizer.business.Manager;
@@ -32,8 +33,8 @@ import javafx.scene.input.TransferMode;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
- *
- * @author Michael.Hofmann@OrangeObjects.de
+ * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
  */
 public class LibraryNodeController implements Initializable {
 

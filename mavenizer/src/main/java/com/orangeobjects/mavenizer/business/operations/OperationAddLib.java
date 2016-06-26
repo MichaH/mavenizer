@@ -1,8 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * O R A N G E   O B J E C T S
+ *
+ * copyright by Orange Objects
+ * http://www.OrangeObjects.de
+ *
  */
+
 package com.orangeobjects.mavenizer.business.operations;
 
 import com.orangeobjects.mavenizer.business.AbstractOperation;
@@ -13,8 +16,8 @@ import com.orangeobjects.mavenizer.data.JarLibrary;
 import java.io.File;
 
 /**
- *
- * @author michael
+ * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
  */
 public class OperationAddLib extends AbstractOperation {
 

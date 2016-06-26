@@ -1,19 +1,19 @@
 /*
- *  O R A N G E   O B J E C T S
- *  copyright by Orange Objects
- * 
- *  http://www.OrangeObjects.de
- * 
- *  $Id$
+ * O R A N G E   O B J E C T S
+ *
+ * copyright by Orange Objects
+ * http://www.OrangeObjects.de
+ *
  */
+
 package com.orangeobjects.mavenizer.util;
 
 import java.util.Observable;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
  */
 public class SimpleObserverable extends Observable {
 

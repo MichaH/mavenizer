@@ -1,10 +1,11 @@
 /*
- *  O R A N G E   O B J E C T S
- *  copyright by Orange Objects
- * 
- *  http://www.OrangeObjects.de
- * 
+ * O R A N G E   O B J E C T S
+ *
+ * copyright by Orange Objects
+ * http://www.OrangeObjects.de
+ *
  */
+
 package com.orangeobjects.mavenizer.gui;
 
 import com.orangeobjects.mavenizer.business.Manager;
@@ -24,9 +25,8 @@ import javafx.scene.control.TextArea;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * FXML Controller class
- *
  * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
  */
 public class MavenPomController implements Initializable, Observer {
 

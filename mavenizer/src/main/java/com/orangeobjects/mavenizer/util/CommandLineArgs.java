@@ -1,11 +1,11 @@
 /*
- *  O R A N G E   O B J E C T S
- *  copyright by Orange Objects
- * 
- *  http://www.OrangeObjects.de
- * 
- *  $Id$
+ * O R A N G E   O B J E C T S
+ *
+ * copyright by Orange Objects
+ * http://www.OrangeObjects.de
+ *
  */
+
 package com.orangeobjects.mavenizer.util;
 
 import java.util.logging.Level;
@@ -19,8 +19,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- *
  * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
  */
 public class CommandLineArgs {
 

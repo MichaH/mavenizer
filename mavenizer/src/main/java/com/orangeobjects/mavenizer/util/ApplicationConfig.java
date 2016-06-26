@@ -1,8 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * O R A N G E   O B J E C T S
+ *
+ * copyright by Orange Objects
+ * http://www.OrangeObjects.de
+ *
  */
+
 package com.orangeobjects.mavenizer.util;
 
 import java.io.File;
@@ -18,6 +21,10 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.ValidatorException;
 
+/**
+ * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
+ */
 public class ApplicationConfig {
 
     static final Logger LOGGER = Logger.getLogger(ApplicationConfig.class.getName());

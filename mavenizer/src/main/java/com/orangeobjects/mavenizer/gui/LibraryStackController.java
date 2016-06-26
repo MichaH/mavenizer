@@ -1,11 +1,11 @@
 /*
- *  O R A N G E   O B J E C T S
- *  copyright by Orange Objects
- * 
- *  http://www.OrangeObjects.de
- * 
- *  $Id$
+ * O R A N G E   O B J E C T S
+ *
+ * copyright by Orange Objects
+ * http://www.OrangeObjects.de
+ *
  */
+
 package com.orangeobjects.mavenizer.gui;
 
 import com.orangeobjects.mavenizer.business.AbstractOperation;
@@ -50,9 +50,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.ValidatorException;
 
 /**
- * FXML LibraryStackController class
- *
  * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
  */
 public class LibraryStackController implements Initializable {
 

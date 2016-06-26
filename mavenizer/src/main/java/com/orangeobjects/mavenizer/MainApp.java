@@ -10,7 +10,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import static javafx.application.Application.launch;
 
-
+/**
+ * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
+ */
 public class MainApp extends Application {
 
     private final static Logger LOGGER = Logger.getLogger(MainApp.class.getName());

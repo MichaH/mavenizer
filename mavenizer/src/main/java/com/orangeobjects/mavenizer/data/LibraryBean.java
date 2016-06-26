@@ -5,6 +5,7 @@
  * http://www.OrangeObjects.de
  *
  */
+
 package com.orangeobjects.mavenizer.data;
 
 import com.orangeobjects.mavenizer.util.ApplicationConfig;
@@ -16,8 +17,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.validator.ValidatorException;
 
 /**
- *
- * @author Michael.Hofmann@OrangeObjects.de
+ * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
  */
 public abstract class LibraryBean {
 

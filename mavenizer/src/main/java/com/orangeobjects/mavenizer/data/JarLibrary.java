@@ -5,6 +5,7 @@
  * http://www.OrangeObjects.de
  *
  */
+
 package com.orangeobjects.mavenizer.data;
 
 import java.io.File;
@@ -16,8 +17,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- *
- * @author Michael.Hofmann@OrangeObjects.de
+ * @author Michael Hofmann <Michael.Hofmann@OrangeObjects.de>
+ * 
  */
 public class JarLibrary extends LibraryBean implements Library, Comparable<Library> {
 
