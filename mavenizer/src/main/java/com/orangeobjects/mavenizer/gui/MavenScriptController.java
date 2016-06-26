@@ -114,9 +114,9 @@ public class MavenScriptController implements Initializable, Observer {
                     sb.append("# ");
                 }
                 sb.append("mvn install:install-file")
-                        .append(" -D").append("groupId=").append(lib.getGroupId())
+                        .append(" -D").append("groupId=").append(lib.getEffectiveGroupId())
                         .append(" -D").append("artifactId=").append(lib.getArtifactId())
-                        .append(" -D").append("version=").append(lib.getVersion())
+                        .append(" -D").append("version=").append(lib.getEffectiveVersion())
                         .append(" -D").append("packaging=jar")
                         .append(" -D").append("file=").append(lib.getOriginalFile().getAbsolutePath())
                         .append(NL);

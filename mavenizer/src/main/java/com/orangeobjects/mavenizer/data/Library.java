@@ -24,8 +24,10 @@ public interface Library {
     int getId();
     public File getOriginalFile();
     public String getGroupId();
+    public String getEffectiveGroupId();
     public String getArtifactId();
     public String getVersion();
+    public String getEffectiveVersion();
     public String getScope();
     public String getType();
     String getDisplayName();
@@ -35,5 +37,4 @@ public interface Library {
     
     String getLastCreator();
     long getLastDataVersionNo();
-    
 }

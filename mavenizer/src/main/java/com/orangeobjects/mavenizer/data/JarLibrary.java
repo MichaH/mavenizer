@@ -36,7 +36,7 @@ public class JarLibrary extends LibraryBean implements Library, Comparable<Libra
     private final String originalArtefactname;           // example: wordTrans
     // only a cache for the immutable extracted version
     private final Optional<String> optOriginalVersion;   // example: 2.3
-
+    
     public JarLibrary(File file) {
         super(file);
         id = ++nextId;
@@ -56,10 +56,10 @@ public class JarLibrary extends LibraryBean implements Library, Comparable<Libra
         
         setArtifactId(getOriginalArtefactname());
         
-        setInheritedVersion( ! optOriginalVersion.isPresent());
+        setInheritedVersion( !optOriginalVersion.isPresent() && propStartInheritedVersion);
         setVersion(optOriginalVersion.orElse(null));
         
-        setInheritedGroupId(true);
+        setInheritedGroupId(propStartInheritedGroupId);
     }
     
     public String getOriginalName() {
@@ -109,13 +109,26 @@ public class JarLibrary extends LibraryBean implements Library, Comparable<Libra
 
     @Override
     public String getGroupId() {
-        return isInheritedGroupId() ? "net.foo.unknown" :  super.getGroupId();
+        return super.getGroupId();
+    }
+    
+    @Override
+    public String getVersion() {
+        return super.getVersion();
+    }
+    
+    @Override
+    public String getEffectiveGroupId() {
+        return isInheritedGroupId() ? propInheritedGroupId : getGroupId();
     }
 
     @Override
-    public String getVersion() {
-        return isInheritedVersion() ? "11.11" : super.getVersion();
+    public String getEffectiveVersion() {
+        return isInheritedVersion() ? propInheritedVersion : getVersion();
     }
     
-    
+    @Override
+    public String getNewLibraryName() {
+        return getArtifactId() + "-" + getEffectiveVersion();
+    }
 }

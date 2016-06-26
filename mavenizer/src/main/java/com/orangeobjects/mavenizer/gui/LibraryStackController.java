@@ -37,6 +37,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -78,14 +79,6 @@ public class LibraryStackController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         Manager.getInstance().getLibCollection().addListener(new MyChangeListener());
-
-        // initialize trashcan
-//        final Image image1 = new Image(MainApp.class.getResourceAsStream("/images/AddToList.png"));
-//        butAdd.setGraphic(new ImageView(image1));
-
-        // initialize plus
-//        final Image image2 = new Image(MainApp.class.getResourceAsStream("/images/RemoveFromList.png"));
-//        hbxTrashcan.getChildren().add(new ImageView(image2));
         
         butAdd.setOnAction(handleAdd);
         
@@ -133,7 +126,9 @@ public class LibraryStackController implements Initializable {
             Platform.runLater(() -> {
                 hbxTrashcan.setEffect(null);
             });
-        });       
+        });
+        
+        Tooltip.install(hbxTrashcan, new Tooltip("hey... use Drag 'n Drop to remove libs"));
     }
 
     private static DropShadow getBorderGlowEffect() {

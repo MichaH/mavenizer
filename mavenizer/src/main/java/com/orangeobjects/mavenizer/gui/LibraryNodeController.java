@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * O R A N G E   O B J E C T S
+ *
+ * copyright by Orange Objects
+ * http://www.OrangeObjects.de
+ *
  */
 package com.orangeobjects.mavenizer.gui;
 
@@ -16,7 +18,6 @@ import java.util.Observable;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -31,9 +32,8 @@ import javafx.scene.input.TransferMode;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
- * FXML Controller class
  *
- * @author michael
+ * @author Michael.Hofmann@OrangeObjects.de
  */
 public class LibraryNodeController implements Initializable {
 
@@ -103,60 +103,52 @@ public class LibraryNodeController implements Initializable {
                 .setLastDataVersionNo(lib.getLastDataVersionNo());
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
     public void equip(JarLibrary lib) {
         assert lib != null;
         this.lib = lib;
-        // set title
-        patJarlibMainPanel.setText(lib.getOriginalFile().getName());
-        // set all fields
-        labId.setText(String.valueOf(lib.getId()));
-        labOriginalFile.setText(lib.getOriginalFile().getAbsolutePath());
-        ftxOriginalArtefactId.setText(lib.getOriginalArtefactname());
-        ftxOriginalVersion.setText(lib.getOptOriginalVersion().orElse(null));
-        // also the editable fields
-        ftxGroupId.setText(lib.getGroupId());
-        ftxArtefactId.setText(lib.getArtifactId());
-        ftxVersion.setText(lib.getVersion());
-        
-        cbxVersionInherit.setSelected(lib.isInheritedVersion());
-        cbxGroupIdInherit.setSelected(lib.isInheritedGroupId());
+        Platform.runLater(() -> {
+            // set title
+            patJarlibMainPanel.setText(lib.getOriginalFile().getName());
+            // set all fields
+            labId.setText(String.valueOf(lib.getId()));
+            labOriginalFile.setText(lib.getOriginalFile().getAbsolutePath());
+            ftxOriginalArtefactId.setText(lib.getOriginalArtefactname());
+            ftxOriginalVersion.setText(lib.getOptOriginalVersion().orElse(null));
+            // also the editable fields
+            ftxGroupId.setText(lib.getGroupId());
+            ftxArtefactId.setText(lib.getArtifactId());
+            ftxVersion.setText(lib.getVersion());
+
+            cbxVersionInherit.setSelected(lib.isInheritedVersion());
+            cbxGroupIdInherit.setSelected(lib.isInheritedGroupId());
+        });
         
         // now, after we filled all widgets, we install the
         // different listeners
-        
         changedPropSignal.addObserver((Observable o, Object arg) -> {
-            System.out.println("all observers will be be informed");
             Manager.getInstance().add(new OperationUpdateLibrary(panel2bean()));
         });
         
         Manager.getInstance().getChangedContentAgent().addObserver((Observable o, Object arg) -> {
             Library newLib = (Library)arg;
             Platform.runLater(() -> {
-                ftxNewLibName.setText(newLib.getNewLibraryName());
+                if (newLib.getId() == this.lib.getId()) {
+                    ftxNewLibName.setText(newLib.getNewLibraryName());
+                }
             });
         });
         
-        patJarlibMainPanel.setOnDragDetected(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent event) {
-                /* drag was detected, start a drag-and-drop gesture*/
-                /* allow any transfer mode */
-                Dragboard db = patJarlibMainPanel.startDragAndDrop(TransferMode.MOVE);
-
-                /* Put a string on a dragboard */
-                ClipboardContent content = new ClipboardContent();
-                content.putString(labId.getText());
-                db.setContent(content);
-
-                event.consume();
-            }
+        patJarlibMainPanel.setOnDragDetected((MouseEvent event) -> {
+            /* drag was detected, start a drag-and-drop gesture*/
+            /* allow any transfer mode */
+            Dragboard db = patJarlibMainPanel.startDragAndDrop(TransferMode.MOVE);
+            
+            /* Put a string on a dragboard */
+            ClipboardContent content = new ClipboardContent();
+            content.putString(labId.getText());
+            db.setContent(content);
+            
+            event.consume();
         });
     }
     
@@ -168,40 +160,25 @@ public class LibraryNodeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Two seconds is a good choice to propagate property changes
-        this.changedPropSignal = new DelayedObserverable(2 * 1000L);
+        this.changedPropSignal = new DelayedObserverable(1300L);
         
         chxScope.setItems(Library.SCOPE_LIST);
         chxScope.setValue(Library.SCOPE_LIST.get(1));
-        chxScope.getSelectionModel().selectedItemProperty().addListener(
-            event -> {
-                update();
-            }
-        );
+        chxScope.getSelectionModel().selectedItemProperty()
+                .addListener(event -> update());
         
         chxType.setItems(Library.TYPE_LIST);
         chxType.setValue(Library.TYPE_LIST.get(1));
-        chxType.getSelectionModel().selectedItemProperty().addListener(
-            event -> {
-                update();
-            }
-        );
+        chxType.getSelectionModel().selectedItemProperty()
+                .addListener(event -> update());
         
-        cbxPom.setOnAction(actionEventHandler);
-        cbxRepository.setOnAction(actionEventHandler);
-        cbxGroupIdInherit.setOnAction(actionEventHandler);
-        cbxVersionInherit.setOnAction(actionEventHandler);
-        
-        ftxVersion.textProperty().addListener(event -> {
-                update();
-            }
-        );
+        cbxPom.setOnAction(event -> update());
+        cbxRepository.setOnAction(event -> update());
+        cbxGroupIdInherit.setOnAction(event -> update());
+        cbxVersionInherit.setOnAction(event -> update());
+        ftxGroupId.textProperty().addListener(event -> update());
+        ftxVersion.textProperty().addListener(event -> update());
     }
-    
-    private final EventHandler<ActionEvent> actionEventHandler = event -> {
-        update();
-    };
-    
-    
     
     final void update() {
         changedPropSignal.notifyObservers();
@@ -210,5 +187,4 @@ public class LibraryNodeController implements Initializable {
     @FXML
     private void changedGroupId(ActionEvent event) {
     }
-    
 }

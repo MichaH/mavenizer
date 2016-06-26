@@ -7,17 +7,22 @@
  */
 package com.orangeobjects.mavenizer.data;
 
+import com.orangeobjects.mavenizer.util.ApplicationConfig;
 import java.io.File;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.validator.ValidatorException;
 
 /**
  *
  * @author Michael.Hofmann@OrangeObjects.de
  */
-public class LibraryBean {
+public abstract class LibraryBean {
 
     private final static Logger LOGGER = Logger.getLogger(LibraryBean.class.getName());
+    private final static ApplicationConfig CONFIG = ApplicationConfig.getInstance();
     
     private final File originalFile;                  // example: /src/target/wordTrans-2.3.jar
     
@@ -31,6 +36,11 @@ public class LibraryBean {
     private boolean pomDependency = true;
     private boolean install = true;
     
+    protected String propInheritedGroupId = null;
+    protected boolean propStartInheritedGroupId = false;
+    protected String propInheritedVersion = null;
+    protected boolean propStartInheritedVersion = false;
+    
     // system fields
     private String lastCreator;
     private long lastDataVersionNo;
@@ -39,10 +49,23 @@ public class LibraryBean {
         assert file != null;
         originalFile = file;
         lastDataVersionNo = 1L;
+        
+        try {
+            propInheritedGroupId = CONFIG.getProperty(
+                    "mavenizer.inherited.groupId", "com.yourCompany.name");
+            propStartInheritedGroupId = Boolean.parseBoolean(CONFIG.getProperty(
+                    "mavenizer.inherited.groupId.start", "false"));
+            propInheritedVersion = CONFIG.getProperty(
+                    "mavenizer.inherited.version", "0.0");
+            propStartInheritedGroupId = Boolean.parseBoolean(CONFIG.getProperty(
+                    "mavenizer.inherited.version.start", "false"));
+        } catch (InterruptedException | TimeoutException | ValidatorException ex) {
+            LOGGER.log(Level.SEVERE, type, ex);
+        }
     }
     
     public static LibraryBean build(File file) {
-        return new LibraryBean(file);
+        return new JarLibrary(file);
     }
 
     public File getOriginalFile() {
@@ -89,7 +112,7 @@ public class LibraryBean {
         return inheritedGroupId;
     }
 
-    public LibraryBean setInheritedGroupId(boolean inheritedGroupId) {
+    final public LibraryBean setInheritedGroupId(boolean inheritedGroupId) {
         this.inheritedGroupId = inheritedGroupId;
         return this;
     }
@@ -98,7 +121,7 @@ public class LibraryBean {
         return inheritedVersion;
     }
 
-    public LibraryBean setInheritedVersion(boolean inheritedVersion) {
+    final public LibraryBean setInheritedVersion(boolean inheritedVersion) {
         this.inheritedVersion = inheritedVersion;
         return this;
     }
@@ -107,7 +130,7 @@ public class LibraryBean {
         return groupId;
     }
 
-    public LibraryBean setGroupId(String groupId) {
+    final public LibraryBean setGroupId(String groupId) {
         this.groupId = groupId;
         return this;
     }
@@ -163,7 +186,5 @@ public class LibraryBean {
         return this;
     }
     
-    public String getNewLibraryName() {
-        return getArtifactId() + "-" + getVersion();
-    }
+    public abstract String getNewLibraryName();
 }

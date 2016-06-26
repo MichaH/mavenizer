@@ -91,7 +91,7 @@ public class Manager {
     
     public void start() {
         
-        this.changedStructurAgent = new DelayedObserverable(1500L);
+        this.changedStructurAgent = new DelayedObserverable(1000L);
         libCollection.addListener(new MyChangeListener());
         
         config = ApplicationConfig.getInstance();

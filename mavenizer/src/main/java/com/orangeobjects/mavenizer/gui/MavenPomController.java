@@ -82,8 +82,8 @@ public class MavenPomController implements Initializable, Observer {
     private boolean isError(Library lib) {
         return cbxCommentErrors.isSelected() && (
             StringUtils.isBlank(lib.getArtifactId()) 
-         || StringUtils.isBlank(lib.getGroupId()) 
-         || StringUtils.isBlank(lib.getVersion())
+         || StringUtils.isBlank(lib.getEffectiveGroupId()) 
+         || StringUtils.isBlank(lib.getEffectiveVersion())
         );
     }
     
@@ -98,9 +98,9 @@ public class MavenPomController implements Initializable, Observer {
                 sb.append("        <!-- ").append(NL);
             }
             sb.append("        <dependency>").append(NL);
-            sb.append("            <groupId>").append(lib.getGroupId()).append("</groupId>").append(NL);
+            sb.append("            <groupId>").append(lib.getEffectiveGroupId()).append("</groupId>").append(NL);
             sb.append("            <artifactId>").append(lib.getArtifactId()).append("</artifactId>").append(NL);
-            sb.append("            <version>").append(lib.getVersion()).append("</version>").append(NL);
+            sb.append("            <version>").append(lib.getEffectiveVersion()).append("</version>").append(NL);
             if (StringUtils.isNotBlank(lib.getScope())) {
                 sb.append("            <scope>").append(lib.getScope()).append("</scope>").append(NL);
             }
