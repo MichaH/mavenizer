@@ -51,7 +51,6 @@ public class MainApp extends Application {
         CommandLineArgs cli = new CommandLineArgs(args) ;
         cli.parse();
         
-        
         Manager.getInstance().start();
         launch(args);
     }
